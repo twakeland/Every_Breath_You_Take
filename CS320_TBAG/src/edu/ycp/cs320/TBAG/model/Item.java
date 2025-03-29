@@ -13,6 +13,7 @@ public class Item {
 	public void setUses(int uses) {
 	    this.uses = uses;
 	}
+	
 	public Integer getUses() {
 	    return uses;
 	}
