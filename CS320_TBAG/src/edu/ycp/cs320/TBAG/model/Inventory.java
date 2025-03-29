@@ -8,6 +8,7 @@ public class Inventory {
 
 	public Inventory(int inventorySize) {
 		this.inventorySize = inventorySize;
+		items = new ArrayList<Item>();
 	}
 
 	public void setSize(int inventorySize) {
