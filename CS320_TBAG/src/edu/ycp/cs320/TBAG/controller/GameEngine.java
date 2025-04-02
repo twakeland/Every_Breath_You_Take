@@ -2,13 +2,15 @@ package edu.ycp.cs320.TBAG.controller;
 
 import edu.ycp.cs320.TBAG.model.Room;
 import edu.ycp.cs320.TBAG.model.Item;
+import edu.ycp.cs320.TBAG.model.ItemWeapons;
+import edu.ycp.cs320.TBAG.model.ItemConsumables;
 import edu.ycp.cs320.TBAG.model.Player;
 
 public class GameEngine {
 	private Room start, hallway, lab, basement;
-	private Item axe, healthKit, oxygenTank;
-	private Player user;
-	
+    private ItemWeapons axe;
+    private ItemConsumables healthKit, oxygenTank;
+    private Player user;
 	
 	public String setData() {
 		start = new Room(1, "You're in starting area", "Welcome to the starting area");
@@ -16,9 +18,9 @@ public class GameEngine {
 		lab = new Room(3, "You're in the lab", "The lab is filled with tons of scientific equipment you don't recognize. There is a medkit on the desk");
 		basement = new Room(4, "You're in the basement", "The basement is cold and damp, you shouldn't be here. You can see an oxygen tank hidden in the dark");
 		
-		axe = new Item(5, 12, "A worn axe used to break down wooden barricades");
-		healthKit = new Item(5, 20, "A packet filled with single-use health stims");
-		oxygenTank = new Item(0, 35, "A sizeable oxygen tank. Great for longer trips underwater");
+		axe = new ItemWeapons(5, 12, "A worn axe used to break down wooden barricades", 10);
+        healthKit = new ItemConsumables(1, 20, "A packet filled with single-use health stims", 50);
+        oxygenTank = new ItemConsumables(Integer.MAX_VALUE, 35, "A sizeable oxygen tank. Great for longer trips underwater", 0);
 		
 		start.makeConnection("west", 2);
 		hallway.makeConnection("north", 3);

@@ -1,0 +1,40 @@
+package edu.ycp.cs320.TBAG.model;
+
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import edu.ycp.cs320.TBAG.model.ItemWeopons;
+
+public class ItemWeaponsTest {
+	private ItemWeapons axe;
+
+    @Before
+    public void setUp() {
+        axe = new ItemWeapons(2, 15, "A rusty axe", 10);
+    }
+
+    @Test
+    public void testInitialization() {
+        assertEquals(Integer.valueOf(2), axe.getUses());
+        assertEquals(Integer.valueOf(15), axe.getValue());
+        assertEquals("A rusty axe", axe.getDescription());
+        assertEquals(Integer.valueOf(10), axe.getDamage());
+    }
+
+    @Test
+    public void testUseWeapon() {
+        axe.use();
+        assertEquals(Integer.valueOf(1), axe.getUses());
+    }
+
+    @Test
+    public void testUseUntilBroken() {
+        axe.use();
+        axe.use();
+        axe.use();  // Shouldn't go below zero
+
+        assertEquals(Integer.valueOf(0), axe.getUses());
+    }
+}
