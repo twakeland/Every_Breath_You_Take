@@ -148,11 +148,7 @@
         font-weight: bold;
         color: #000;
       }
-      /* Position the diamond buttons so their centers form a diamond:
-         North: center at (90, 30) -> top-left corner at (60, 0)
-         East: center at (150, 90) -> top-left corner at (120, 60)
-         South: center at (90, 150) -> top-left corner at (60, 120)
-         West: center at (30, 90) -> top-left corner at (0, 60) */
+      /* Position the diamond buttons so their centers form a diamond */
       .diamond-container .north {
         top: 0;
         left: 60px;
@@ -168,15 +164,6 @@
       .diamond-container .west {
         top: 60px;
         left: 0px;
-      }
-      .response {
-        position: fixed;
-        right: 620px;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 2;
-        text-align: center;
-        color: #fff;
       }
     </style>
   </head>
@@ -233,14 +220,15 @@
       </div>
     </div>
     
-    <div class="response">${response}</div>
-    
     <script>
       $(document).ready(function(){
-          // Initialize the terminal with an empty prompt and disable auto echo.
+          // Initialize the terminal.
+          // Echoing of commands is disabled by default, so we manually echo the user input.
           var term = $('#terminal').terminal(function(command, termInstance) {
               if (command !== '') {
-                  termInstance.echo('> ' + command);
+                  // Echo user input prefixed by "> " and then send to the server.
+                  term.echo("> " + command);
+                  sendDirection(command);
               }
           }, {
               greetings: 'Welcome to every breath you take',
@@ -248,7 +236,7 @@
               echoCommand: false
           });
           
-          // Remove built-in terminal input.
+          // Remove the built-in terminal input.
           $('.jquery-terminal-input').remove();
           
           // Prevent key events in the terminal area.
@@ -257,16 +245,34 @@
               return false;
           });
           
-          // Redirect focus to separate command input when clicking terminal.
+          // Redirect focus to the separate command input when clicking the terminal.
           $('#terminal').on('click', function() {
               $('#command-input').focus();
           });
           
+          // Function to send a direction via AJAX.
+          function sendDirection(direction) {
+              $.ajax({
+                  url: 'gamePage',
+                  type: 'POST',
+                  data: { direction: direction, ajax: "true" },
+                  success: function(data) {
+                      // Echo the system response with extra spacing for readability.
+                      term.echo("\n" + data + "\n");
+                  },
+                  error: function() {
+                      term.echo('Error processing direction: ' + direction);
+                  }
+              });
+          }
+          
           // Handle submission from the separate input box.
           $('#submit-button').on('click', function(){
-              var command = $('#command-input').val();
+              var command = $('#command-input').val().trim();
               if (command !== '') {
-                  term.exec(command);
+                  // Echo user input and send the command.
+                  term.echo("> " + command);
+                  sendDirection(command);
                   $('#command-input').val('');
               }
           });
@@ -277,6 +283,15 @@
                   e.preventDefault();
                   $('#submit-button').click();
               }
+          });
+          
+          // Intercept directional button form submissions to prevent page refresh.
+          $('.directional-controls form').on('submit', function(e) {
+              e.preventDefault();
+              var direction = $(this).find('input[name="direction"]').val();
+              // Echo user input and send the command.
+              term.echo("> " + direction);
+              sendDirection(direction);
           });
       });
     </script>
