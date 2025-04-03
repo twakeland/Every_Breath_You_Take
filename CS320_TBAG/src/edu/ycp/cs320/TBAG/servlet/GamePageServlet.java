@@ -1,54 +1,76 @@
 package edu.ycp.cs320.TBAG.servlet;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import edu.ycp.cs320.TBAG.controller.GameEngine;
 
 public class GamePageServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private GameEngine controller;
+    private static final long serialVersionUID = 1L;
+    private GameEngine controller;
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        controller = new GameEngine();
+    }
 
-		System.out.println("GamePage Servlet: doGet");	
-		
-		controller = new GameEngine();
-		req.setAttribute("response", controller.setData());
-		
-		// call JSP to generate empty form
-		req.getRequestDispatcher("/_view/gamePage.jsp").forward(req, resp);
-	}
-	
-	@Override
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        System.out.println("GamePage Servlet: doGet");    
+
+        req.setAttribute("response", controller.setData());
+
+        // Call JSP to generate the empty form
+        req.getRequestDispatcher("/_view/gamePage.jsp").forward(req, resp);
+    }
+    
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         
-		String response = null;
-		
+        String response = null;
+        
         // Get the "direction" parameter from the request
         String direction = req.getParameter("direction");
         
-        // If the parameter is missing, you can set a default value (optional)
-        if(direction == null) {
+        // If the parameter is missing or empty, set a default message
+        if (direction == null || direction.trim().isEmpty()) {
             direction = "None";
-        }
-        else {
-        	response = controller.response(direction);
+            response = "No direction entered.";
+        } else {
+            // Validate the direction input
+            if (isValidDirection(direction)) {
+                // Process the valid direction using your GameEngine
+                response = controller.response(direction);
+            } else {
+                response = "Invalid direction input. Please enter one of: North, East, South, West, Up, Down.";
+            }
         }
         
-        // Set the direction as a request attribute so that it can be accessed in the JSP
-        req.setAttribute("direction", direction);
-        req.setAttribute("response", response);
-        
-        // Forward the request to the addNumbers JSP to display the result or do further processing
-        req.getRequestDispatcher("/_view/gamePage.jsp").forward(req, resp);
+        // If this is an AJAX request, return the response as plain text.
+        if (req.getParameter("ajax") != null) {
+            resp.setContentType("text/plain");
+            resp.getWriter().write(response);
+        } else {
+            // Otherwise, forward back to the JSP.
+            req.setAttribute("direction", direction);
+            req.setAttribute("response", response);
+            req.getRequestDispatcher("/_view/gamePage.jsp").forward(req, resp);
+        }
     }
-
+    
+    // Utility method to validate the input direction.
+    private boolean isValidDirection(String direction) {
+        return direction.equalsIgnoreCase("north") ||
+               direction.equalsIgnoreCase("east") ||
+               direction.equalsIgnoreCase("south") ||
+               direction.equalsIgnoreCase("west") ||
+               direction.equalsIgnoreCase("up") ||
+               direction.equalsIgnoreCase("down");
+    }
 }
