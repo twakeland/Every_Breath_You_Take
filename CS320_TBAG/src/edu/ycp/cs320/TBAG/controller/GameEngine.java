@@ -16,9 +16,9 @@ public class GameEngine {
 		lab = new Room(3, "You're in the lab", "The lab is filled with tons of scientific equipment you don't recognize. There is a medkit on the desk");
 		basement = new Room(4, "You're in the basement", "The basement is cold and damp, you shouldn't be here. You can see an oxygen tank hidden in the dark");
 		
-		axe = new Item(5, 12, "A worn axe used to break down wooden barricades");
-		healthKit = new Item(5, 20, "A packet filled with single-use health stims");
-		oxygenTank = new Item(0, 35, "A sizeable oxygen tank. Great for longer trips underwater");
+		axe = new Item("Axe", 5, 12, "A worn axe used to break down wooden barricades");
+		healthKit = new Item("Health Kit", 5, 20, "A packet filled with single-use health stims");
+		oxygenTank = new Item("Oxygen Tank", 0, 35, "A sizeable oxygen tank. Great for longer trips underwater");
 		
 		start.makeConnection("west", 2);
 		hallway.makeConnection("north", 3);
@@ -54,6 +54,14 @@ public class GameEngine {
 				return "You can't go that way";
 			}
 			
+		}
+		
+		if(command.equals("pick up")) {
+			if(currentRoom.getInventory().getItems().size() != 0) {
+				user.getInventory().addItem(currentRoom.getInventory().removeItem(0));
+				return "You Picked up the " + user.getInventory().getItem(0).getName();
+			}
+			return "There's nothing to pick up";
 		}
 		
 		return "I do not recognize that command";

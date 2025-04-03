@@ -18,13 +18,21 @@ public class Inventory {
 	public int getSize() {
 	    return inventorySize;
 	}
+	
+	public ArrayList<Item> getItems(){
+		return items;
+	}
 
 	public void addItem(Item item) {
 	    items.add(item);
 	}
 
-	public void removeItem(int index) {
-	    items.remove(index);
+	public Item removeItem(int index) {
+	    return items.remove(index);
+	}
+	
+	public Item getItem(int index) {
+		return items.get(index);
 	}
 	
 	public boolean contains(Item searchItem) {
