@@ -70,6 +70,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/apache-jstl/org.apache.taglibs.taglibs-standard-impl-1.2.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/apache-jstl/org.apache.taglibs.taglibs-standard-spec-1.2.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jetty-schemas-3.1.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk-8.0.442.6-hotspot"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Eclipse Temurin 8 [1.8.0_442]"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

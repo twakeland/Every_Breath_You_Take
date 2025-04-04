@@ -19,8 +19,4 @@ public class Player extends Actor{
 	  public void setCommand(String command) {
 	    this.command = command;
 	  }
-	  
-	  public Inventory getInventory() {
-		  return playerInventory;
-	  }
 }
