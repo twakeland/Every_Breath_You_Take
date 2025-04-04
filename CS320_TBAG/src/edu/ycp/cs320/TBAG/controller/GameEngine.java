@@ -89,6 +89,18 @@ public class GameEngine {
 			return currentRoom.getLongDesc();
 		}
 		
+		if(command.equalsIgnoreCase("check inventory")) {
+			Integer size = user.getInventory().getItems().size();
+			String items = "Your inventory:\n"; 
+			if(size == 0) {
+				return "There's nothing in your inventory";
+			}
+			for(int i = 0; i < size; i++) {
+				items += user.getInventory().getItem(i).getName() + "\n";
+			}
+			return items;
+		}
+		
 		return "I do not recognize that command";
 	}
 	

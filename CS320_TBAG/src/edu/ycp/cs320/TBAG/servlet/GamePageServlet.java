@@ -73,6 +73,7 @@ public class GamePageServlet extends HttpServlet {
                direction.equalsIgnoreCase("up") ||
                direction.equalsIgnoreCase("down") ||
                direction.equalsIgnoreCase("pick up") ||
-               direction.equalsIgnoreCase("search");
+               direction.equalsIgnoreCase("search") ||
+               direction.equalsIgnoreCase("check inventory");
     }
 }
