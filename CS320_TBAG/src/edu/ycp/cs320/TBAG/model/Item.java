@@ -5,6 +5,7 @@ public class Item {
 	private String itemDescription, itemName;
 
 	public Item(String itemName, Integer uses, Integer value, String itemDescription) {
+		this.itemName = itemName;
 		this.uses = uses;
 		this.value = value;
 		this.itemDescription = itemDescription;

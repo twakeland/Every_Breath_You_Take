@@ -55,7 +55,7 @@ public class GameEngine {
 				}
 				else {
 					currentRoom.setHasVisited(true);
-					//Good lord please ignore how shitty this convo system is so far-->
+					//Good lord please ignore how barebones this convo system is so far-->
 					System.out.println(currentRoom.containsNPCS());
 					if(currentRoom.containsNPCS()){
 						String tempString = currentRoom.getLongDesc();
@@ -65,7 +65,7 @@ public class GameEngine {
 					}
 					
 					System.out.println("No NPCS detected, initial descr overridden");
-					return currentRoom.getLongDesc() + "beans";
+					return currentRoom.getLongDesc();
 					
 				}
 			}
@@ -78,7 +78,8 @@ public class GameEngine {
 		if(command.equalsIgnoreCase("pick up")) {
 			if(currentRoom.getInventory().getItems().size() != 0) {
 				user.getInventory().addItem(currentRoom.getInventory().removeItem(0));
-				return "You picked up the " + user.getInventory().getItem(0).getName();
+				Integer size = user.getInventory().getItems().size();
+				return "You picked up the " + user.getInventory().getItem(size - 1).getName();
 			}
 			
 			return "There is nothing to pick up";
