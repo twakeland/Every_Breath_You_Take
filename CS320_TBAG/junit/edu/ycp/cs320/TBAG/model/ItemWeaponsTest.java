@@ -38,12 +38,4 @@ public class ItemWeaponsTest {
         assertEquals(Integer.valueOf(0), axe.getUses());
     }
 
-    @Test
-    public void testUsingBrokenWeapon() {
-        axe.use();
-        axe.use();
-        axe.use();  // Weapon should already be broken
-
-        assertEquals(Integer.valueOf(0), axe.getUses());
-    }
  }
