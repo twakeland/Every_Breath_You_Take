@@ -38,7 +38,7 @@ public class GameEngine {
 	
 	public String response(String command) {
 		Room currentRoom = getRoom(user.getLocation());
-		if(command.equals("north") || command.equals("south") || command.equals("west") || command.equals("east") || command.equals("up") || command.equals("down")) {
+		if(command.equalsIgnoreCase("north") || command.equalsIgnoreCase("south") || command.equalsIgnoreCase("west") || command.equalsIgnoreCase("east") || command.equalsIgnoreCase("up") || command.equalsIgnoreCase("down")) {
 			if(currentRoom.getConnection(command) != null) {
 				moveActor(currentRoom.getConnection(command));
 				currentRoom = getRoom(user.getLocation());
@@ -56,7 +56,7 @@ public class GameEngine {
 			
 		}
 		
-		if(command.equals("pick up")) {
+		if(command.equalsIgnoreCase("pick up")) {
 			if(currentRoom.getInventory().getItems().size() != 0) {
 				user.getInventory().addItem(currentRoom.getInventory().removeItem(0));
 				return "You Picked up the " + user.getInventory().getItem(0).getName();
@@ -64,7 +64,7 @@ public class GameEngine {
 			return "There's nothing to pick up";
 		}
 		
-		if(command.equals("search")) {
+		if(command.equalsIgnoreCase("search")) {
 			return currentRoom.getLongDesc();
 		}
 		

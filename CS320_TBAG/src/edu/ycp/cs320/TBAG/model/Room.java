@@ -1,5 +1,6 @@
 package edu.ycp.cs320.TBAG.model;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -60,6 +61,7 @@ public class Room {
 	}
 	
 	public Integer getConnection(String direction) {
+		direction = direction.toLowerCase(Locale.ENGLISH);
 		return connections.get(direction);
 	}
 }
