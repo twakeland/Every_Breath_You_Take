@@ -64,6 +64,10 @@ public class GameEngine {
 			return "There's nothing to pick up";
 		}
 		
+		if(command.equals("search")) {
+			return currentRoom.getLongDesc();
+		}
+		
 		return "I do not recognize that command";
 	}
 	
