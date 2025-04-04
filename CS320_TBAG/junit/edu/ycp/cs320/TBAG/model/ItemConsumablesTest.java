@@ -12,7 +12,7 @@ public class ItemConsumablesTest {
 
     @Before
     public void setUp() {
-        healthKit = new ItemConsumables(3, 20, "A small medkit", 50);
+        healthKit = new ItemConsumables("Health Kit", 3, 20, "A small medkit", 50);
     }
 
     @Test

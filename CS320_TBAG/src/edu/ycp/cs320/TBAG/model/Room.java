@@ -1,9 +1,8 @@
 package edu.ycp.cs320.TBAG.model;
 
-import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
-
 
 public class Room {
 	private Integer roomID;
@@ -11,7 +10,6 @@ public class Room {
 	private Inventory inventory;
 	private Boolean hasVisited;
 	private Map<String, Integer> connections;
-	public ArrayList<NPC> NPCS;
 	
 	public Room(Integer roomID, String shortDesc, String longDesc) {
 		this.roomID = roomID;
@@ -20,16 +18,6 @@ public class Room {
 		this.hasVisited = false;
 		inventory = new Inventory(10);
 		connections = new TreeMap<>();
-		NPCS = new ArrayList<NPC>();
-	}
-	
-	public boolean containsNPCS(){
-		if (NPCS.isEmpty()) {
-			return false;
-		}
-		else {
-			return true;
-		}
 	}
 	
 	public void setRoomID(Integer roomID) {
@@ -73,14 +61,7 @@ public class Room {
 	}
 	
 	public Integer getConnection(String direction) {
+		direction = direction.toLowerCase(Locale.ENGLISH);
 		return connections.get(direction);
-	}
-	
-	public void addNPC(NPC newNPC) {
-		NPCS.add(newNPC);
-	}
-	
-	public void removeNPC(int index) {
-		NPCS.remove(index);
 	}
 }
