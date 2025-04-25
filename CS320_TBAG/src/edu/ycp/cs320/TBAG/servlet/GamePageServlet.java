@@ -48,7 +48,7 @@ public class GamePageServlet extends HttpServlet {
                 // Process the valid direction using your GameEngine
                 response = controller.response(direction);
             } else {
-                response = "Invalid direction input. Please enter one of: North, East, South, West, Up, Down.";
+                response = "Invalid input.";
             }
         }
         
@@ -71,6 +71,9 @@ public class GamePageServlet extends HttpServlet {
                direction.equalsIgnoreCase("south") ||
                direction.equalsIgnoreCase("west") ||
                direction.equalsIgnoreCase("up") ||
-               direction.equalsIgnoreCase("down");
+               direction.equalsIgnoreCase("down") ||
+               direction.equalsIgnoreCase("pick up") ||
+               direction.equalsIgnoreCase("search") ||
+               direction.equalsIgnoreCase("check inventory");
     }
 }
