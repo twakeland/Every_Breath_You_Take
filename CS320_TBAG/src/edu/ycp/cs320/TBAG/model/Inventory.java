@@ -11,11 +11,11 @@ public class Inventory {
         items = new ArrayList<>();
     }
 
-    public void setSize(int inventorySize) {
+    public void setInvSize(int inventorySize) {
         this.inventorySize = inventorySize;
     }
 
-    public int getSize() {
+    public int getInvSize() {
         return inventorySize;
     }
 
@@ -32,9 +32,13 @@ public class Inventory {
     public boolean contains(Item searchItem) {
         return items.contains(searchItem);
     }
-
+    
+    public Item getItem(int index) {
+    	return items.get(index);
+    }
+    
     // New method to get an item by description
-    public Item getItem(String description) {
+    public Item getItemByString(String description) {
         for (Item item : items) {
             if (item.getDescription().equalsIgnoreCase(description)) {
                 return item;

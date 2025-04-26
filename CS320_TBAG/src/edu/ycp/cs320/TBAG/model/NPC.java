@@ -2,16 +2,16 @@ package edu.ycp.cs320.TBAG.model;
 
 public class NPC extends Actor{
 	private boolean isAttackable;
-	private String firstDesc;
-	private String tempConversation;
+	private String attackQuip;
+	private String leaveQuip;
 	//private String 
 	
-	public NPC(int health, int location, boolean isAttackable, String firstDesc) {
+	public NPC(int health, int location, boolean isAttackable, String attackQuip, String leaveQuip) {
 	    super(health, location);  // Calls Actor constructor
 	    this.isAttackable = isAttackable;
-	    this.firstDesc = firstDesc;
-	    //completley temporary conversation 
-	    tempConversation = "You attempt to talk to the stranger, he promptly tells you to go away";
+	    this.attackQuip = attackQuip;
+	    this.leaveQuip = leaveQuip;
+	    
 	    }
 	
 	public boolean getAttackable() {
@@ -22,16 +22,20 @@ public class NPC extends Actor{
 		this.isAttackable = isAttackable;
 	    }
 	
-	public String getFirstDesc() {
-	    return firstDesc;
+	public String getAttackQuip() {
+	    return attackQuip;
 	 	}
 	  
-	public void setFirstDesc(String firstDesc) {
-		this.firstDesc = firstDesc;
+	public void setAttackQuip(String attackQuip) {
+		this.attackQuip = attackQuip;
 	    }
 	
-	public String getTempConvo() {
-	    return tempConversation;
+	public String getLeaveQuip() {
+	    return leaveQuip;
 	 	}
+	  
+	public void setLeaveQuip(String leaveQuip) {
+		this.leaveQuip = leaveQuip;
+	    }
 	
 }
