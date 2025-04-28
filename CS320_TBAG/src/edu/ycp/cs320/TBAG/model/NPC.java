@@ -6,8 +6,8 @@ public class NPC extends Actor{
 	private String tempConversation;
 	//private String 
 	
-	public NPC(int health, int location, boolean isAttackable, String firstDesc) {
-	    super(health, location);  // Calls Actor constructor
+	public NPC() {
+	    super();  // Calls Actor constructor
 	    this.isAttackable = isAttackable;
 	    this.firstDesc = firstDesc;
 	    //completley temporary conversation 
