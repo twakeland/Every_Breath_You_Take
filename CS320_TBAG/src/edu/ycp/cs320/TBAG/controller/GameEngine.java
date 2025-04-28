@@ -16,13 +16,16 @@ public class GameEngine {
 	
 	public String setData() {
 		start = new Room(1, "You're in the starting area", "Welcome to the starting area");
-		hallway = new Room(2, "You're in a long hallway", "The hallway is long and dark. You can see a light in the distance. There is an axe leaning on the wall. A stranger is leaning in the corner.");
+		hallway = new Room(2, "You're in a long hallway", "The hallway is long and dark. You can see a light in the distance. There is an axe leaning on the wall. A stranger stands in the corner.");
 		lab = new Room(3, "You're in the lab", "The lab is filled with tons of scientific equipment you don't recognize. There is a medkit on the desk");
 		basement = new Room(4, "You're in the basement", "The basement is cold and damp, you shouldn't be here. You can see an oxygen tank hidden in the dark");
 		
 		//Temporary addNPC to hallway
-		tempNPC = new NPC(5, 2, true, "Have at thee!", "Welp, bye for now.");
+		Item tempQuestItem = new Item("Shiny Rock", 1, 1, "Its a cool lookin rock");
+		tempNPC = new NPC(5, 2, true, "Have at thee!", "You leave the stranger to his shenanigans.", "You wouldn't happen to have a shiny rock on you?", "You remove the shiny rock you found and hand it to the stranger. His eyes shine with happiness.", tempQuestItem);
 		hallway.addNPC(tempNPC);
+		
+		
 		
 		//axe = new ItemWeapons("Axe", 5, 12, "A worn axe used to break down wooden barricades", 12);
 		//healthKit = new ItemConsumables("Health Kit", 5, 20, "A packet filled with single-use health stims", 20);
@@ -40,6 +43,10 @@ public class GameEngine {
 		basement.getInventory().addItem(oxygenTank);
 		
 		user = new Player(100, 1, null);
+		
+		//Gives user the quest item for testing purposes
+		user.getInventory().addItem(tempQuestItem);
+		
 		start.setHasVisited(true);
 		return start.getLongDesc();
 	}
@@ -51,12 +58,19 @@ public class GameEngine {
 			NPC target = currentRoom.getNPC(0);
 			//Talk dialog choice
 			if(command.equalsIgnoreCase("talk")) {
-				return ("Talk WIP");
+				return target.getQuestStartQuip();
 			}
 			
 			//Give Item dialog choice
 			if(command.equalsIgnoreCase("give item")) {
-				return ("giveItem WIP");
+				if (user.getInventory().contains(target.getQuestItem()) && target.getQuestItem() != null) {
+					int tempIndex = user.getInventory().getItemIndex((target.getQuestItem()));
+					user.getInventory().removeItem(tempIndex);
+					return target.getQuestFinQuip();
+				}
+				else {
+					return "They have no need for anything you have.";
+				}
 			}
 			
 			//Attack Dialog choice
@@ -103,7 +117,7 @@ public class GameEngine {
 		
 		if(command.equalsIgnoreCase("talk") && currentRoom.containsNPCS()) {
 			user.setDialog(true);
-			return "!!WIP!! You walk up to the NPC";
+			return "You approach the stranger.";
 		}
 		else if (command.equalsIgnoreCase("talk")) {
 			return "There is no one in the room to talk to.";

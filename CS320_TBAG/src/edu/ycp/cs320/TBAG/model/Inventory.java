@@ -37,6 +37,11 @@ public class Inventory {
     	return items.get(index);
     }
     
+    public int getItemIndex(Item item) {
+    	return items.indexOf(item);
+    }
+    
+    
     // New method to get an item by description
     public Item getItemByString(String description) {
         for (Item item : items) {
