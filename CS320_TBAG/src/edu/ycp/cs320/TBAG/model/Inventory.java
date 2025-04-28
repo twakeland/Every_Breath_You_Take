@@ -3,39 +3,38 @@ package edu.ycp.cs320.TBAG.model;
 import java.util.ArrayList;
 
 public class Inventory {
-	private int inventorySize;
-	private ArrayList<Item> items;
+	private int inventoryId;
+	private ArrayList<Integer> items;
 
-	public Inventory(int inventorySize) {
-		this.inventorySize = inventorySize;
-		items = new ArrayList<Item>();
+	public Inventory() {
+		items = new ArrayList<Integer>();
 	}
 
-	public void setSize(int inventorySize) {
-	    this.inventorySize = inventorySize;
+	public void setInventoryId(int inventoryId) {
+	    this.inventoryId = inventoryId;
 	}
 
-	public int getSize() {
-	    return inventorySize;
+	public int getInventoryId() {
+	    return inventoryId;
 	}
 	
-	public ArrayList<Item> getItems(){
+	public ArrayList<Integer> getItems(){
 		return items;
 	}
 
-	public void addItem(Item item) {
+	public void addItem(Integer item) {
 	    items.add(item);
 	}
 
-	public Item removeItem(int index) {
+	public Integer removeItem(int index) {
 	    return items.remove(index);
 	}
 	
-	public Item getItem(int index) {
+	public Integer getItem(int index) {
 		return items.get(index);
 	}
 	
-	public boolean contains(Item searchItem) {
+	public boolean contains(Integer searchItem) {
 	    if(items.contains(searchItem)) {
 	      return true;
 	    }
