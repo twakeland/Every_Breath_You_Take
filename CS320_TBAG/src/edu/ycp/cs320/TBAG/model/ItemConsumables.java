@@ -3,8 +3,8 @@ package edu.ycp.cs320.TBAG.model;
 public class ItemConsumables extends Item {
     private Integer healingAmount;
 
-    public ItemConsumables(Integer uses, Integer value, String itemDescription, Integer healingAmount) {
-        super(uses, value, itemDescription);
+    public ItemConsumables(String itemName, Integer uses, Integer value, String itemDescription, Integer healingAmount) {
+        super(itemName, uses, value, itemDescription);
         this.healingAmount = healingAmount;
     }
 
