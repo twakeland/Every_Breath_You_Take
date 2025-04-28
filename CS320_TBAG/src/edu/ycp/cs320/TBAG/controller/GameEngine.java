@@ -16,12 +16,12 @@ public class GameEngine {
 	
 	public String setData() {
 		start = new Room(1, "You're in the starting area", "Welcome to the starting area");
-		hallway = new Room(2, "You're in a long hallway", "The hallway is long and dark. You can see a light in the distance. There is an axe leaning on the wall");
+		hallway = new Room(2, "You're in a long hallway", "The hallway is long and dark. You can see a light in the distance. There is an axe leaning on the wall. A stranger is leaning in the corner.");
 		lab = new Room(3, "You're in the lab", "The lab is filled with tons of scientific equipment you don't recognize. There is a medkit on the desk");
 		basement = new Room(4, "You're in the basement", "The basement is cold and damp, you shouldn't be here. You can see an oxygen tank hidden in the dark");
 		
 		//Temporary addNPC to hallway
-		tempNPC = new NPC(5, 2, true, "Have at thee!", "Welp, bye for now." );
+		tempNPC = new NPC(5, 2, true, "Have at thee!", "Welp, bye for now.");
 		hallway.addNPC(tempNPC);
 		
 		//axe = new ItemWeapons("Axe", 5, 12, "A worn axe used to break down wooden barricades", 12);
