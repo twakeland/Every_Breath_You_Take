@@ -16,13 +16,14 @@ public class GameEngine {
 	
 	public String setData() {
 		start = new Room(1, "You're in the starting area", "Welcome to the starting area");
-		hallway = new Room(2, "You're in a long hallway", "The hallway is long and dark. You can see a light in the distance. There is an axe leaning on the wall. A stranger stands in the corner.");
-		lab = new Room(3, "You're in the lab", "The lab is filled with tons of scientific equipment you don't recognize. There is a medkit on the desk");
+		hallway = new Room(2, "You're in a long hallway. The stranger is still in the corner.", "The hallway is long and dark. You can see a light in the distance. There is an axe leaning on the wall. A stranger stands in the corner.");
+		lab = new Room(3, "You're in the lab", "The lab is filled with tons of scientific equipment you don't recognize. There is a shiny rock on the floor.");
 		basement = new Room(4, "You're in the basement", "The basement is cold and damp, you shouldn't be here. You can see an oxygen tank hidden in the dark");
 		
 		//Temporary addNPC to hallway
 		Item tempQuestItem = new Item("Shiny Rock", 1, 1, "Its a cool lookin rock");
-		tempNPC = new NPC(5, 2, true, "Have at thee!", "You leave the stranger to his shenanigans.", "You wouldn't happen to have a shiny rock on you?", "You remove the shiny rock you found and hand it to the stranger. His eyes shine with happiness.", tempQuestItem);
+		lab.getInventory().addItem(tempQuestItem);
+		tempNPC = new NPC(5, 2, true, "You punch the stranger in the throat for no reason. \n\"Have at thee!\" he yells, readying his weapon.", "You leave the stranger to his shenanigans.", "You wouldn't happen to have a shiny rock on you?", "You remove the shiny rock you found and hand it to the stranger. His eyes shine with happiness.", tempQuestItem);
 		hallway.addNPC(tempNPC);
 		
 		
@@ -43,9 +44,6 @@ public class GameEngine {
 		basement.getInventory().addItem(oxygenTank);
 		
 		user = new Player(100, 1, null);
-		
-		//Gives user the quest item for testing purposes
-		user.getInventory().addItem(tempQuestItem);
 		
 		start.setHasVisited(true);
 		return start.getLongDesc();
@@ -115,7 +113,7 @@ public class GameEngine {
 			
 		}
 		
-		if(command.equalsIgnoreCase("talk") && currentRoom.containsNPCS()) {
+		if(command.equalsIgnoreCase("approach") && currentRoom.containsNPCS()) {
 			user.setDialog(true);
 			return "You approach the stranger.";
 		}
@@ -124,13 +122,13 @@ public class GameEngine {
 		}
 		
 		if(command.equalsIgnoreCase("pick up")) {
-			if(currentRoom.getInventory().getInvSize() != 0) {
+			if(currentRoom.getInventory().isEmpty() != true) {
 				Item tempItem = currentRoom.getInventory().getItem(0);
 				currentRoom.getInventory().removeItem(0);
 				user.getInventory().addItem(tempItem);
 				
-				Integer size = user.getInventory().getInvSize();
-				return "You picked up the " + user.getInventory().getItem(size - 1).getName();
+				Integer size = user.getInventory().getItemIndex(tempItem);
+				return "You picked up the " + user.getInventory().getItem(size).getName();
 			}
 			
 			return "There is nothing to pick up";

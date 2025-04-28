@@ -10,6 +10,10 @@ public class Inventory {
         this.inventorySize = inventorySize;
         items = new ArrayList<>();
     }
+    
+    public boolean isEmpty() {
+    	return items.isEmpty();
+    }
 
     public void setInvSize(int inventorySize) {
         this.inventorySize = inventorySize;
