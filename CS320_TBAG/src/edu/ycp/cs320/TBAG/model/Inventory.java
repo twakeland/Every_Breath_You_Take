@@ -32,6 +32,10 @@ public class Inventory {
             items.remove(index);
         }
     }
+    
+    public int getNumItems() {
+    	return items.size();
+    }
 
     public boolean contains(Item searchItem) {
         return items.contains(searchItem);

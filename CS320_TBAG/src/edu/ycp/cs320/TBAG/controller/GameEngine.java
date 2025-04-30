@@ -28,8 +28,8 @@ public class GameEngine {
 		
 		
 		
-		axe = new ItemWeapons("Axe", 5, 12, "A worn axe used to break down wooden barricades", 12);
-		healthKit = new ItemConsumables("Health Kit", 5, 20, "A packet filled with single-use health stims", 20);
+		//axe = new ItemWeapons("Axe", 5, 12, "A worn axe used to break down wooden barricades", 12);
+		//healthKit = new ItemConsumables("Health Kit", 5, 20, "A packet filled with single-use health stims", 20);
 		oxygenTank = new Item("Oxygen Tank", 0, 35, "A sizeable oxygen tank. Great for longer trips underwater");		
 		
 		start.makeConnection("west", 2);
@@ -139,7 +139,7 @@ public class GameEngine {
 		}
 		
 		if(command.equalsIgnoreCase("check inventory")) {
-			Integer size = user.getInventory().getInvSize();
+			Integer size = user.getInventory().getNumItems();
 			String items = "Your inventory:\n"; 
 			if(size == 0) {
 				return "There's nothing in your inventory";
