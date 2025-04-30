@@ -15,17 +15,13 @@ public class GameEngine {
 	
 	
 	public String setData() {
-		start = new Room(1, "You're in the starting area", "Welcome to the starting area");
-		hallway = new Room(2, "You're in a long hallway", "The hallway is long and dark. You can see a light in the distance. There is an axe leaning on the wall");
-		lab = new Room(3, "You're in the lab", "The lab is filled with tons of scientific equipment you don't recognize. There is a medkit on the desk");
-		basement = new Room(4, "You're in the basement", "The basement is cold and damp, you shouldn't be here. You can see an oxygen tank hidden in the dark");
 		
 		//Temp addNPC to hallway
 		tempNPC = new NPC(5, 2, false, "A mysterious stranger stands in the corner, his face masked by shadows.");
 		hallway.addNPC(tempNPC);
 		
-		axe = new ItemWeapons("Axe", 5, 12, "A worn axe used to break down wooden barricades", 12);
-		healthKit = new ItemConsumables("Health Kit", 5, 20, "A packet filled with single-use health stims", 20);
+		axe = new Item("Axe", 5, 12, "A worn axe used to break down wooden barricades");
+		healthKit = new Item("Health Kit", 5, 20, "A packet filled with single-use health stims");
 		oxygenTank = new Item("Oxygen Tank", 0, 35, "A sizeable oxygen tank. Great for longer trips underwater");		
 		
 		start.makeConnection("west", 2);
@@ -45,11 +41,11 @@ public class GameEngine {
 	}
 	
 	public String response(String command) {
-		Room currentRoom = getRoom(user.getLocation());
+		Room currentRoom = getRoom(user.getRoomId());
 		if(command.equalsIgnoreCase("north") || command.equalsIgnoreCase("south") || command.equalsIgnoreCase("west") || command.equalsIgnoreCase("east") || command.equalsIgnoreCase("up") || command.equalsIgnoreCase("down")) {
 			if(currentRoom.getConnection(command) != null) {
 				moveActor(currentRoom.getConnection(command));
-				currentRoom = getRoom(user.getLocation());
+				currentRoom = getRoom(user.getRoomId());
 				if(currentRoom.getHasVisited()) {
 					return currentRoom.getShortDesc();
 				}
