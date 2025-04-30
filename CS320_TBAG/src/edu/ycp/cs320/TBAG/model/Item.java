@@ -4,7 +4,7 @@ public class Item {
 	private Integer itemID, uses, value;
 	private String itemDescription, itemName;
 
-	public Item() {
+	public Item(String itemName, int uses, int value, String itemDescription) {
 		
 	}
 	

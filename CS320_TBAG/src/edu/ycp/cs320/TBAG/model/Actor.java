@@ -5,8 +5,12 @@ public class Actor {
 	private String actorName;
 
 	// Constructor
-	public Actor() {
-		
+	public Actor(int actorID, int roomID, int inventoryID, int health, String actorName) {
+		this.actorID = actorID;
+		this.roomID = roomID;
+		this.inventoryID = inventoryID;
+		this.health = health;
+		this.actorName = actorName;
 	}
 
 	//Set Methods
