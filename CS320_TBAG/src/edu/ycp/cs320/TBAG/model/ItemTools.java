@@ -3,8 +3,8 @@ package edu.ycp.cs320.TBAG.model;
 public class ItemTools extends Item {
     private Integer repairProgress;
 
-    public ItemTools(Integer uses, Integer value, String itemDescription, Integer repairProgress) {
-        super(uses, value, itemDescription);
+    public ItemTools(String itemName, int uses, int value, String itemDescription, Integer repairProgress) {
+        super(itemName, uses, value, itemDescription);
         this.repairProgress = repairProgress;
     }
 

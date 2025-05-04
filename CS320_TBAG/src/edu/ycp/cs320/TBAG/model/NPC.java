@@ -6,11 +6,11 @@ public class NPC extends Actor{
 	private String tempConversation;
 	//private String 
 	
-	public NPC() {
-	    super();  // Calls Actor constructor
+	public NPC(int actorID, int roomID, int inventoryID, int health, String actorName, boolean isAttackable, String firstDesc,  String tempConversation) {
+	    super( actorID, roomID, inventoryID, health, actorName);  // Calls Actor constructor
 	    this.isAttackable = isAttackable;
 	    this.firstDesc = firstDesc;
-	    //completley temporary conversation 
+	    //Completely temporary conversation 
 	    tempConversation = "You attempt to talk to the stranger, he promptly tells you to go away";
 	    }
 	

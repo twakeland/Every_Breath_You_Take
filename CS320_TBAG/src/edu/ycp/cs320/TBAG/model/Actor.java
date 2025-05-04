@@ -11,7 +11,10 @@ public class Actor {
 		this.inventoryID = inventoryID;
 		this.health = health;
 		this.actorName = actorName;
+			
 	}
+	
+	public Actor() {}
 
 	//Set Methods
 	public void setHealth(int health) {
