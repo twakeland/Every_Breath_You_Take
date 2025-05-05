@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class Inventory {
 	private int inventoryId;
-	private ArrayList<Integer> items;
+	private ArrayList<Item> items;
 
 	public Inventory() {
-		items = new ArrayList<Integer>();
+		items = new ArrayList<Item>();
 	}
 
 	public void setInventoryId(int inventoryId) {
@@ -18,23 +18,23 @@ public class Inventory {
 	    return inventoryId;
 	}
 	
-	public ArrayList<Integer> getItems(){
+	public ArrayList<Item> getItems(){
 		return items;
 	}
 
-	public void addItem(Integer item) {
+	public void addItem(Item item) {
 	    items.add(item);
 	}
 
-	public Integer removeItem(int index) {
+	public Item removeItem(int index) {
 	    return items.remove(index);
 	}
 	
-	public Integer getItem(int index) {
+	public Item getItem(int index) {
 		return items.get(index);
 	}
 	
-	public boolean contains(Integer searchItem) {
+	public boolean contains(Item searchItem) {
 	    if(items.contains(searchItem)) {
 	      return true;
 	    }

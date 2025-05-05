@@ -6,6 +6,10 @@ import edu.ycp.cs320.TBAG.model.ItemWeapons;
 import edu.ycp.cs320.TBAG.model.ItemConsumables;
 import edu.ycp.cs320.TBAG.model.Player;
 import edu.ycp.cs320.TBAG.model.NPC;
+import edu.ycp.cs320.TBAG.persist.DatabaseProvider;
+import edu.ycp.cs320.TBAG.persist.IDatabase;
+import edu.ycp.cs320.TBAG.persist.FakeDatabase;
+import edu.ycp.cs320.TBAG.persist.DerbyDatabase;
 
 public class GameEngine {
 	private Room start, hallway, lab, basement;
@@ -16,52 +20,57 @@ public class GameEngine {
 	
 	public String setData() {
 		
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		IDatabase db = DatabaseProvider.getInstance();
+		
 		//Temp addNPC to hallway
-		tempNPC = new NPC(5, 2, false, "A mysterious stranger stands in the corner, his face masked by shadows.");
-		hallway.addNPC(tempNPC);
+		tempNPC = new NPC(2, 2, 2, 50, "temp", false, "A mysterious stranger stands in the corner, his face masked by shadows.");
+		db.findRoomByRoomId(2).addNPC(tempNPC);
 		
 		axe = new Item("Axe", 5, 12, "A worn axe used to break down wooden barricades");
 		healthKit = new Item("Health Kit", 5, 20, "A packet filled with single-use health stims");
 		oxygenTank = new Item("Oxygen Tank", 0, 35, "A sizeable oxygen tank. Great for longer trips underwater");		
 		
-		start.makeConnection("west", 2);
-		hallway.makeConnection("north", 3);
-		hallway.makeConnection("east", 1);
-		lab.makeConnection("down", 4);
-		lab.makeConnection("south", 2);
-		basement.makeConnection("up", 3);
+		db.findRoomByRoomId(1).makeConnection("west", 2);
+		db.findRoomByRoomId(2).makeConnection("north", 3);
+		db.findRoomByRoomId(2).makeConnection("east", 1);
+		db.findRoomByRoomId(3).makeConnection("down", 4);
+		db.findRoomByRoomId(3).makeConnection("south", 2);
+		db.findRoomByRoomId(4).makeConnection("up", 3);
 		
-		hallway.getInventory().addItem(axe);
-		lab.getInventory().addItem(healthKit);
-		basement.getInventory().addItem(oxygenTank);
+		db.findRoomByRoomId(2).getInventory().addItem(axe);
+		db.findRoomByRoomId(3).getInventory().addItem(healthKit);
+		db.findRoomByRoomId(4).getInventory().addItem(oxygenTank);
 		
-		user = new Player(100, 1, null);
-		start.setHasVisited(true);
-		return start.getLongDesc();
+		user = new Player(1, 1, 1, 100, "player");
+		db.findRoomByRoomId(1).setHasVisited(true);
+		return db.findRoomByRoomId(1).getLongDesc();
 	}
 	
 	public String response(String command) {
-		Room currentRoom = getRoom(user.getRoomId());
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		IDatabase db = DatabaseProvider.getInstance();
+		
 		if(command.equalsIgnoreCase("north") || command.equalsIgnoreCase("south") || command.equalsIgnoreCase("west") || command.equalsIgnoreCase("east") || command.equalsIgnoreCase("up") || command.equalsIgnoreCase("down")) {
-			if(currentRoom.getConnection(command) != null) {
-				moveActor(currentRoom.getConnection(command));
-				currentRoom = getRoom(user.getRoomId());
-				if(currentRoom.getHasVisited()) {
-					return currentRoom.getShortDesc();
+			if(db.findRoomByRoomId(user.getRoomId()).getConnection(command) != null) {
+				moveActor(db.findRoomByRoomId(user.getRoomId()).getConnection(command));
+				
+				if(db.findRoomByRoomId(user.getRoomId()).getHasVisited()) {
+					return db.findRoomByRoomId(user.getRoomId()).getShortDesc();
 				}
 				else {
-					currentRoom.setHasVisited(true);
+					db.findRoomByRoomId(user.getRoomId()).setHasVisited(true);
 					//Good lord please ignore how barebones this convo system is so far-->
-					System.out.println(currentRoom.containsNPCS());
-					if(currentRoom.containsNPCS()){
-						String tempString = currentRoom.getLongDesc();
-						tempString += "\n" + currentRoom.NPCS.get(0).getTempConvo();
+					System.out.println(db.findRoomByRoomId(user.getRoomId()).containsNPCS());
+					if(db.findRoomByRoomId(user.getRoomId()).containsNPCS()){
+						String tempString = db.findRoomByRoomId(user.getRoomId()).getLongDesc();
+						tempString += "\n" + db.findRoomByRoomId(user.getRoomId()).NPCS.get(0).getTempConvo();
 						
 						return tempString;
 					}
 					
 					System.out.println("No NPCS detected, initial descr overridden");
-					return currentRoom.getLongDesc();
+					return db.findRoomByRoomId(user.getRoomId()).getLongDesc();
 					
 				}
 			}
@@ -72,17 +81,17 @@ public class GameEngine {
 		}
 		
 		if(command.equalsIgnoreCase("pick up")) {
-			if(currentRoom.getInventory().getItems().size() != 0) {
-				user.getInventory().addItem(currentRoom.getInventory().removeItem(0));
+			if(db.findRoomByRoomId(user.getRoomId()).getInventory().getItems().size() != 0) {
+				user.getInventory().addItem(db.findRoomByRoomId(user.getRoomId()).getInventory().removeItem(0));
 				Integer size = user.getInventory().getItems().size();
-				return "You picked up the " + user.getInventory().getItem(size - 1).getName();
+				return "You picked up the " + user.getInventory().getItem(size - 1).getItemName();
 			}
 			
 			return "There is nothing to pick up";
 		}
 		
 		if(command.equalsIgnoreCase("search")) {
-			return currentRoom.getLongDesc();
+			return db.findRoomByRoomId(user.getRoomId()).getLongDesc();
 		}
 		
 		if(command.equalsIgnoreCase("check inventory")) {
@@ -92,7 +101,7 @@ public class GameEngine {
 				return "There's nothing in your inventory";
 			}
 			for(int i = 0; i < size; i++) {
-				items += user.getInventory().getItem(i).getName() + "\n";
+				items += user.getInventory().getItem(i).getItemName() + "\n";
 			}
 			return items;
 		}
@@ -101,7 +110,7 @@ public class GameEngine {
 	}
 	
 	public void moveActor(Integer roomID) {
-		user.setLocation(roomID);
+		user.setRoomId(roomID);
 	}
 	
 	public Room getRoom(Integer roomID) {

@@ -17,6 +17,7 @@ public class Room {
 	
 	public Room() {
 		this.hasVisited = false;
+		inventory = new Inventory();
 		connections = new TreeMap<>();
 		NPCS = new ArrayList<NPC>();
 	}
