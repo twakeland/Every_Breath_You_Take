@@ -14,14 +14,17 @@ import edu.ycp.cs320.TBAG.model.Pair;
 public class FakeDatabase implements IDatabase {
 	
 	private List<Room> roomList;
+	private List<Item> itemList;
 	
 	public FakeDatabase() {
 		roomList = new ArrayList<Room>();
+		itemList = new ArrayList<Item>();
 		
 		// Add initial data
 		readInitialData();
 		
 		System.out.println(roomList.size() + " rooms");
+		System.out.println(itemList.size() + " items");
 	}
 	
 	public Room findRoomByRoomId(int roomId) {
@@ -32,6 +35,17 @@ public class FakeDatabase implements IDatabase {
 		}
 		return null;
 	}
+	
+	public Item findItemByItemId(int itemId) {
+		for(Item item : itemList) {
+			if(item.getItemId() == itemId) {
+				return item;
+			}
+		}
+		return null;
+	}
+	
+	
 
 	public void readInitialData() {
 		try {

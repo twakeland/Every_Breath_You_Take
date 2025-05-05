@@ -72,6 +72,53 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	
+	@Override
+	public Item findItemByItemId(final int itemId) {
+		return executeTransaction(new Transaction<Item>() {
+			@Override
+			public Item execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					// retrieve all attributes from Items table
+					stmt = conn.prepareStatement(
+							"select items.* " +
+							"  from items " +
+							" where item_id = ?"
+					);
+					stmt.setInt(1, itemId);
+					
+					resultSet = stmt.executeQuery();
+					
+					Item item = new Item();
+					
+					// for testing that a result was returned
+					Boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						// create new Room object
+						// retrieve attributes from resultSet starting with index 1
+						loadItem(item, resultSet, 1);
+					}
+					
+					// check if the title was found
+					if (!found) {
+						System.out.println("<" + itemId + "> was not found in the books table");
+					}
+					
+					return item;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
 			return doExecuteTransaction(txn);
@@ -133,6 +180,15 @@ public class DerbyDatabase implements IDatabase {
 		room.setLongDesc(resultSet.getString(index++));
 	}
 	
+	private void loadItem(Item item, ResultSet resultSet, int index) throws SQLException {
+		item.setItemId(resultSet.getInt(index++));
+		item.setItemName(resultSet.getString(index++));
+		item.setValue(resultSet.getInt(index++));
+		item.setUses(resultSet.getInt(index++));
+		item.setItemType(resultSet.getString(index++));
+		item.setDescription(resultSet.getString(index++));
+	}
+	
 	public void createTables() {
 		executeTransaction(new Transaction<Boolean>() {
 			@Override
@@ -156,6 +212,34 @@ public class DerbyDatabase implements IDatabase {
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt1);
+				}
+			}
+		});
+		
+		executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt2 = null;
+				
+				try {
+					
+					stmt2 = conn.prepareStatement(
+							"create table items (" +
+							"	itemID integer primary key " +
+							"		generated always as identity (start with 1, increment by 1), " +	
+							"	itemName varchar(200), " +
+							"	uses integer, " +
+							"	value integer, " +
+							"	itemType varchar(200), " +
+							"	itemDescription varchar(200), " +
+			
+							")"
+					);	
+					stmt2.executeUpdate();
+						
+					return true;
+				} finally {
+					DBUtil.closeQuietly(stmt2);
 				}
 			}
 		});
@@ -191,7 +275,49 @@ public class DerbyDatabase implements IDatabase {
 				} finally {
 					DBUtil.closeQuietly(insertRoom);
 				}
+				
+				
 			}
+			
+			
+		});
+		
+		executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				List<Item> itemList;
+				
+				try {
+					itemList = InitialData.getItems();
+				} catch (IOException e) {
+					throw new SQLException("Couldn't read initial data", e);
+				}
+
+				PreparedStatement insertItem   = null;
+
+				try {
+					
+					insertItem = conn.prepareStatement("insert into items (itemID, itemName, uses, value, itemType, itemDescription) values (?, ?, ?, ?, ?,?)");
+					for (Item item : itemList) {
+						insertItem.setInt(1, item.getItemId());
+						insertItem.setString(2, item.getItemName());
+						insertItem.setInt(3, item.getUses());
+						insertItem.setInt(4, item.getValue());
+						insertItem.setString(5, item.getItemType());
+						insertItem.setString(6, item.getDescription());
+						insertItem.addBatch();
+					}
+					insertItem.executeBatch();
+					
+					return true;
+				} finally {
+					DBUtil.closeQuietly(insertItem);
+				}
+				
+				
+			}
+			
+			
 		});
 	}
 	
