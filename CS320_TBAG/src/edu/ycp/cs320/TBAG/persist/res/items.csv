@@ -1,41 +1,40 @@
-Item_ID,Name,Uses,Value,Type,Description
-1,Rusty Axe,5,1,Weapon,Dull and falling apart. Hard to use.
-2,Lumber Axe,10,2,Weapon,Decent for chopping basic stuff.
-3,Forged Iron Axe,25,3,Weapon,Sharp and solid. Feels good to swing.
-4,Battle Axe,100,4,Weapon,Hits hard. Good in a fight.
-5,Storm Axe,200,5,Weapon,Glows with power. Cuts through anything... almost.
-6,Rusty Wrench,5,1,Tool,Slips a lot. Might break any second.
-7,Basic Wrench,10,2,Tool,Gets the job done.
-8,Steel Wrench,25,3,Tool,Strong and sturdy.
-9,Power Wrench,100,4,Tool,Makes tightening easy.
-10,Auto Wrench,200,5,Tool,Fixes things fast—almost like magic.
-11,Leaky Tank,5,1,Consumable,Barely holds any air.
-12,Air Tank,10,2,Consumable,Standard. Nothing fancy.
-13,Steel Tank,25,3,Consumable,Holds more air. Reliable.
-14,Smart Tank,100,4,Consumable,Light and efficient.
-15,Endless Tank,200,5,Consumable,Feels like it never runs out.
-16,Dirty Bandage,5,1,Consumable,Stops a bit of bleeding. Not sterile.
-17,Small Medkit,10,2,Consumable,Basic first aid. Good for minor wounds.
-18,Medkit,25,3,Consumable,Handles most injuries. Solid choice.
-19,Advanced Kit,50,4,Consumable,Heals fast. Comes with painkillers too.
-20,Nano Medkit,100,5,Consumable,Instant full heal. Feels like magic.
-21,Worn Diveskin,5,1,Wearable,"Thin, waterlogged suit. Minimal protection."
-22,Reinforced Wetsuit,15,2,Wearable,Slightly insulated. Helps against scrapes and pressure.
-23,Composite Suit,35,3,Wearable,Lined with lightweight plating and thermal gel.
-24,Pressure Guard,60,4,Wearable,Rated for deep-sea pressure and predator bites.
-25,Abysswalker Shell,90,5,Wearable,Advanced exosuit rumored to be powered by geothermal tech.
-26,Cracked Hand Torch,2,1,Tool,"Flickers constantly, barely helps in dark water."
-27,Basic Dive Light,4,2,Tool,"Steady beam, limited cone."
-28,Wide-Beam Lamp,7,3,Tool,"Broad cone, can light up small rooms or tight caverns."
-29,Flood Array,12,4,Tool,"Multiple high-lumen lights, great for scanning terrain."
-30,Light of the Deep,15,5,Tool,Casts daylight-like clarity in a massive area.
-31,Damaged Ping Sensor,15,1,Wearable,"Sends slow, weak sonar pings. Laggy returns."
-32,Basic Sonar Array,35,2,Wearable,Good for navigation and detecting rocks or fish.
-33,Terrain Mapper,70,3,Wearable,Builds rough topographic maps and picks up motion.
-34,Lifeform Tracker,125,4,Wearable,Highlights heat signatures and nearby fauna in detail.
-35,Deepmind Scanner,300,5,Wearable,Real-time 3D imaging of entire sectors. Knows things before you do.
-36,Sealing Tape,5,1,Material,Temporary fix. Will peel under pressure.
-37,Steel Patch Kit,20,2,Material,Welds into place. Takes time but works.
-38,Liquid Metal Sealant,40,3,Material,Spreads to fill cracks. Pressure-tested.
-39,Self-Fusing Panels,75,4,Material,Snap-in reinforcements that adjust to hull curvature.
-40,Biofoam Structure Gel,100,5,Material,"Grows to match hull, hardens instantly. Never fails."
+Rusty Axe|5|1|Weapon|Dull and falling apart. Hard to use.
+Lumber Axe|10|2|Weapon|Decent for chopping basic stuff.
+Forged Iron Axe|25|3|Weapon|Sharp and solid. Feels good to swing.
+Battle Axe|100|4|Weapon|Hits hard. Good in a fight.
+Storm Axe|200|5|Weapon|Glows with power. Cuts through anything... almost.
+Rusty Wrench|5|1|Tool|Slips a lot. Might break any second.
+Basic Wrench|10|2|Tool|Gets the job done.
+Steel Wrench|25|3|Tool|Strong and sturdy.
+Power Wrench|100|4|Tool|Makes tightening easy.
+Auto Wrench|200|5|Tool|Fixes things fast—almost like magic.
+Leaky Tank|5|1|Consumable|Barely holds any air.
+Air Tank|10|2|Consumable|Standard. Nothing fancy.
+Steel Tank|25|3|Consumable|Holds more air. Reliable.
+Smart Tank|100|4|Consumable|Light and efficient.
+Endless Tank|200|5|Consumable|Feels like it never runs out.
+Dirty Bandage|5|1|Consumable|Stops a bit of bleeding. Not sterile.
+Small Medkit|10|2|Consumable|Basic first aid. Good for minor wounds.
+Medkit|25|3|Consumable|Handles most injuries. Solid choice.
+Advanced Kit|50|4|Consumable|Heals fast. Comes with painkillers too.
+Nano Medkit|100|5|Consumable|Instant full heal. Feels like magic.
+Worn Diveskin|5|1|Wearable|Thin, waterlogged suit. Minimal protection.
+Reinforced Wetsuit|15|2|Wearable|Slightly insulated. Helps against scrapes and pressure.
+Composite Suit|35|3|Wearable|Lined with lightweight plating and thermal gel.
+Pressure Guard|60|4|Wearable|Rated for deep-sea pressure and predator bites.
+Abysswalker Shell|90|5|Wearable|Advanced exosuit rumored to be powered by geothermal tech.
+Cracked Hand Torch|2|1|Tool|Flickers constantly, barely helps in dark water.
+Basic Dive Light|4|2|Tool|Steady beam, limited cone.
+Wide-Beam Lamp|7|3|Tool|Broad cone, can light up small rooms or tight caverns.
+Flood Array|12|4|Tool|Multiple high-lumen lights, great for scanning terrain.
+Light of the Deep|15|5|Tool|Casts daylight-like clarity in a massive area.
+Damaged Ping Sensor|15|1|Wearable|Sends slow, weak sonar pings. Laggy returns.
+Basic Sonar Array|35|2|Wearable|Good for navigation and detecting rocks or fish.
+Terrain Mapper|70|3|Wearable|Builds rough topographic maps and picks up motion.
+Lifeform Tracker|125|4|Wearable|Highlights heat signatures and nearby fauna in detail.
+Deepmind Scanner|300|5|Wearable|Real-time 3D imaging of entire sectors. Knows things before you do.
+Sealing Tape|5|1|Material|Temporary fix. Will peel under pressure.
+Steel Patch Kit|20|2|Material|Welds into place. Takes time but works.
+Liquid Metal Sealant|40|3|Material|Spreads to fill cracks. Pressure-tested.
+Self-Fusing Panels|75|4|Material|Snap-in reinforcements that adjust to hull curvature.
+Biofoam Structure Gel|100|5|Material|Grows to match hull, hardens instantly. Never fails.

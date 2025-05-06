@@ -194,6 +194,7 @@ public class DerbyDatabase implements IDatabase {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 				PreparedStatement stmt1 = null;
+				PreparedStatement stmt2 = null;
 				
 				try {
 					
@@ -208,20 +209,6 @@ public class DerbyDatabase implements IDatabase {
 							")"
 					);	
 					stmt1.executeUpdate();
-						
-					return true;
-				} finally {
-					DBUtil.closeQuietly(stmt1);
-				}
-			}
-		});
-		
-		executeTransaction(new Transaction<Boolean>() {
-			@Override
-			public Boolean execute(Connection conn) throws SQLException {
-				PreparedStatement stmt2 = null;
-				
-				try {
 					
 					stmt2 = conn.prepareStatement(
 							"create table items (" +
@@ -231,18 +218,19 @@ public class DerbyDatabase implements IDatabase {
 							"	uses integer, " +
 							"	value integer, " +
 							"	itemType varchar(200), " +
-							"	itemDescription varchar(200), " +
-			
+							"	itemDescription varchar(200) " +
 							")"
 					);	
 					stmt2.executeUpdate();
 						
 					return true;
 				} finally {
-					DBUtil.closeQuietly(stmt2);
+					DBUtil.closeQuietly(stmt1);
 				}
 			}
 		});
+		
+		
 	}
 	
 	public void loadInitialData() {
@@ -250,14 +238,17 @@ public class DerbyDatabase implements IDatabase {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 				List<Room> roomList;
+				List<Item> itemList;
 				
 				try {
 					roomList = InitialData.getRooms();
+					itemList = InitialData.getItems();
 				} catch (IOException e) {
 					throw new SQLException("Couldn't read initial data", e);
 				}
 
 				PreparedStatement insertRoom   = null;
+				PreparedStatement insertItem   = null;
 
 				try {
 					
@@ -271,33 +262,7 @@ public class DerbyDatabase implements IDatabase {
 					}
 					insertRoom.executeBatch();
 					
-					return true;
-				} finally {
-					DBUtil.closeQuietly(insertRoom);
-				}
-				
-				
-			}
-			
-			
-		});
-		
-		executeTransaction(new Transaction<Boolean>() {
-			@Override
-			public Boolean execute(Connection conn) throws SQLException {
-				List<Item> itemList;
-				
-				try {
-					itemList = InitialData.getItems();
-				} catch (IOException e) {
-					throw new SQLException("Couldn't read initial data", e);
-				}
-
-				PreparedStatement insertItem   = null;
-
-				try {
-					
-					insertItem = conn.prepareStatement("insert into items (itemID, itemName, uses, value, itemType, itemDescription) values (?, ?, ?, ?, ?,?)");
+					insertItem = conn.prepareStatement("insert into items (itemID, itemName, uses, value, itemType, itemDescription) values (?, ?, ?, ?, ?, ?)");
 					for (Item item : itemList) {
 						insertItem.setInt(1, item.getItemId());
 						insertItem.setString(2, item.getItemName());
@@ -311,7 +276,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					return true;
 				} finally {
-					DBUtil.closeQuietly(insertItem);
+					DBUtil.closeQuietly(insertRoom);
 				}
 				
 				
@@ -319,6 +284,7 @@ public class DerbyDatabase implements IDatabase {
 			
 			
 		});
+		
 	}
 	
 	// The main method creates the database tables and loads the initial data.
