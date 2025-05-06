@@ -262,14 +262,13 @@ public class DerbyDatabase implements IDatabase {
 					}
 					insertRoom.executeBatch();
 					
-					insertItem = conn.prepareStatement("insert into items (itemID, itemName, uses, value, itemType, itemDescription) values (?, ?, ?, ?, ?, ?)");
+					insertItem = conn.prepareStatement("insert into items (itemName, uses, value, itemType, itemDescription) values (?, ?, ?, ?, ?)");
 					for (Item item : itemList) {
-						insertItem.setInt(1, item.getItemId());
-						insertItem.setString(2, item.getItemName());
-						insertItem.setInt(3, item.getUses());
-						insertItem.setInt(4, item.getValue());
-						insertItem.setString(5, item.getItemType());
-						insertItem.setString(6, item.getDescription());
+						insertItem.setString(1, item.getItemName());
+						insertItem.setInt(2, item.getUses());
+						insertItem.setInt(3, item.getValue());
+						insertItem.setString(4, item.getItemType());
+						insertItem.setString(5, item.getDescription());
 						insertItem.addBatch();
 					}
 					insertItem.executeBatch();
