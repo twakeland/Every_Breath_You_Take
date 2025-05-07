@@ -11,6 +11,7 @@ public class InitialData {
 	public static List<Room> getRooms() throws IOException {
 		List<Room> roomList = new ArrayList<Room>();
 		ReadCSV readRooms = new ReadCSV("rooms.csv");
+		ReadCSV readConnections = new ReadCSV("connections.csv");
 		try {
 			// auto-generated primary key for authors table
 			Integer roomId = 1;
