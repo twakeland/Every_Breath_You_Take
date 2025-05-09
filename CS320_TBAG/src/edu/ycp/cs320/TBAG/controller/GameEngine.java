@@ -31,13 +31,6 @@ public class GameEngine {
 		healthKit = new Item("Health Kit", 5, 20, "A packet filled with single-use health stims");
 		oxygenTank = new Item("Oxygen Tank", 0, 35, "A sizeable oxygen tank. Great for longer trips underwater");		
 		
-		db.findRoomByRoomId(1).makeConnection("west", 2);
-		db.findRoomByRoomId(2).makeConnection("north", 3);
-		db.findRoomByRoomId(2).makeConnection("east", 1);
-		db.findRoomByRoomId(3).makeConnection("down", 4);
-		db.findRoomByRoomId(3).makeConnection("south", 2);
-		db.findRoomByRoomId(4).makeConnection("up", 3);
-		
 		db.findRoomByRoomId(2).getInventory().addItem(axe);
 		db.findRoomByRoomId(3).getInventory().addItem(healthKit);
 		db.findRoomByRoomId(4).getInventory().addItem(oxygenTank);
