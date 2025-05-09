@@ -8,6 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import edu.ycp.cs320.TBAG.model.*;
 
@@ -56,6 +59,7 @@ public class DerbyDatabase implements IDatabase {
 						// create new Room object
 						// retrieve attributes from resultSet starting with index 1
 						loadRoom(room, resultSet, 1);
+						room.setConnections(findConnectionsByRoomId(roomId));
 					}
 					
 					// check if the title was found
@@ -72,27 +76,27 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
-	
 	@Override
-	public Item findItemByItemId(final int itemId) {
-		return executeTransaction(new Transaction<Item>() {
+	public Map<String, Integer> findConnectionsByRoomId(final int roomId) {
+		return executeTransaction(new Transaction<Map<String, Integer>>() {
 			@Override
-			public Item execute(Connection conn) throws SQLException {
+			public Map<String, Integer> execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
 				
 				try {
-					// retrieve all attributes from Items table
+					// retrieve all attributes from Rooms table
 					stmt = conn.prepareStatement(
-							"select items.* " +
-							"  from items " +
-							" where item_id = ?"
+							"select connections.direction, connections.connection_id " +
+							"  from connections, rooms " +
+							" where rooms.room_id = connections.room_id" +
+							"   and rooms.room_id = ? " 
 					);
-					stmt.setInt(1, itemId);
+					stmt.setInt(1, roomId);
 					
 					resultSet = stmt.executeQuery();
 					
-					Item item = new Item();
+					Map<String, Integer> connections = new TreeMap<>();
 					
 					// for testing that a result was returned
 					Boolean found = false;
@@ -102,15 +106,15 @@ public class DerbyDatabase implements IDatabase {
 						
 						// create new Room object
 						// retrieve attributes from resultSet starting with index 1
-						loadItem(item, resultSet, 1);
+						loadConnections(connections, resultSet, 1);
 					}
 					
 					// check if the title was found
 					if (!found) {
-						System.out.println("<" + itemId + "> was not found in the books table");
+						System.out.println("<" + roomId + "> was not found in the books table");
 					}
 					
-					return item;
+					return connections;
 				} finally {
 					DBUtil.closeQuietly(resultSet);
 					DBUtil.closeQuietly(stmt);
@@ -180,13 +184,8 @@ public class DerbyDatabase implements IDatabase {
 		room.setLongDesc(resultSet.getString(index++));
 	}
 	
-	private void loadItem(Item item, ResultSet resultSet, int index) throws SQLException {
-		item.setItemId(resultSet.getInt(index++));
-		item.setItemName(resultSet.getString(index++));
-		item.setValue(resultSet.getInt(index++));
-		item.setUses(resultSet.getInt(index++));
-		item.setItemType(resultSet.getString(index++));
-		item.setDescription(resultSet.getString(index++));
+	private void loadConnections(Map<String, Integer> connections, ResultSet resultSet, int index) throws SQLException {
+		connections.put(resultSet.getString(index++), resultSet.getInt(index++));
 	}
 	
 	public void createTables() {
@@ -211,26 +210,21 @@ public class DerbyDatabase implements IDatabase {
 					stmt1.executeUpdate();
 					
 					stmt2 = conn.prepareStatement(
-							"create table items (" +
-							"	itemID integer primary key " +
-							"		generated always as identity (start with 1, increment by 1), " +	
-							"	itemName varchar(200), " +
-							"	uses integer, " +
-							"	value integer, " +
-							"	itemType varchar(200), " +
-							"	itemDescription varchar(200) " +
+							"create table connections (" +
+							"	room_id integer, " +									
+							"	direction varchar(40), " +
+							"	connection_id integer constraint connection_id references rooms " +
 							")"
-					);	
+					);
 					stmt2.executeUpdate();
 						
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt1);
+					DBUtil.closeQuietly(stmt2);
 				}
 			}
 		});
-		
-		
 	}
 	
 	public void loadInitialData() {
@@ -238,18 +232,16 @@ public class DerbyDatabase implements IDatabase {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 				List<Room> roomList;
-				List<Item> itemList;
 				
 				try {
 					roomList = InitialData.getRooms();
-					itemList = InitialData.getItems();
 				} catch (IOException e) {
 					throw new SQLException("Couldn't read initial data", e);
 				}
 
-				PreparedStatement insertRoom   = null;
-				PreparedStatement insertItem   = null;
-
+				PreparedStatement insertRoom = null;
+				PreparedStatement insertConnection = null;
+				
 				try {
 					
 					insertRoom = conn.prepareStatement("insert into rooms (inventory_id, roomName, shortDesc, longDesc) values (?, ?, ?, ?)");
@@ -262,28 +254,24 @@ public class DerbyDatabase implements IDatabase {
 					}
 					insertRoom.executeBatch();
 					
-					insertItem = conn.prepareStatement("insert into items (itemName, uses, value, itemType, itemDescription) values (?, ?, ?, ?, ?)");
-					for (Item item : itemList) {
-						insertItem.setString(1, item.getItemName());
-						insertItem.setInt(2, item.getUses());
-						insertItem.setInt(3, item.getValue());
-						insertItem.setString(4, item.getItemType());
-						insertItem.setString(5, item.getDescription());
-						insertItem.addBatch();
+					insertConnection = conn.prepareStatement("insert into connections (room_id, direction, connection_id) values (?, ?, ?)");
+					for (Room room : roomList) {
+						Set<String> directions = room.getConnections().keySet();
+						for (String direction : directions) {
+							insertConnection.setInt(1, room.getRoomId());
+							insertConnection.setString(2, direction);
+							insertConnection.setInt(3, room.getConnection(direction));
+							insertConnection.addBatch();
+						}
 					}
-					insertItem.executeBatch();
+					insertConnection.executeBatch();
 					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(insertRoom);
 				}
-				
-				
 			}
-			
-			
 		});
-		
 	}
 	
 	// The main method creates the database tables and loads the initial data.

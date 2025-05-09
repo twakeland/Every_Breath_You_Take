@@ -17,21 +17,30 @@ public class InitialData {
 			Integer roomId = 1;
 			while (true) {
 				List<String> tuple = readRooms.next();
+				List<String> tuple2 = readConnections.next();
 				if (tuple == null) {
 					break;
 				}
 				Iterator<String> i = tuple.iterator();
+				Iterator<String> i2 = tuple2.iterator();
 				Room room = new Room();
 				room.setRoomId(roomId++);	
 				room.setInventoryId(Integer.parseInt(i.next()));
 				room.setRoomName(i.next());
 				room.setShortDesc(i.next());
 				room.setLongDesc(i.next());
+				while (true) {
+					if(i2.hasNext() == false) {
+						break;
+					}
+					room.makeConnection(i2.next(), Integer.parseInt(i2.next()));
+				}
 				roomList.add(room);
 			}
 			return roomList;
 		} finally {
 			readRooms.close();
+			readConnections.close();
 		}
 	}
 	

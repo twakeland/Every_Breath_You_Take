@@ -1,6 +1,7 @@
 package edu.ycp.cs320.TBAG.persist;
 
 import java.util.List;
+import java.util.Map;
 
 import edu.ycp.cs320.TBAG.model.Room;
 import edu.ycp.cs320.TBAG.model.Actor;
@@ -15,4 +16,5 @@ public interface IDatabase {
 	//public List<Pair<Room, Inventory>> findRoomInventory(Room Room);
 	//public List<Pair<Actor, Inventory>> findActorInventory(Actor actor);
 	//public List<Pair<Inventory, Item>> findItemInInventory(Inventory inventory);
+	public Map<String, Integer> findConnectionsByRoomId(int roomId);
 }
