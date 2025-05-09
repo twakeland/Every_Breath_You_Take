@@ -44,7 +44,7 @@ public class GameEngineTest {
 	@Test
     public void testWeaponsExistInRooms() {
         Room hallway = testEngine.getRoom(2); // Hallway
-        Item axe = hallway.getInventory().getItem(0);
+        Item axe = hallway.getInventory().getItem("A worn axe used to break down wooden barricades");
 
         assertNotNull(axe);
         assertTrue(axe instanceof ItemWeapons);
@@ -55,7 +55,7 @@ public class GameEngineTest {
     @Test
     public void testConsumablesExistInRooms() {
         Room lab = testEngine.getRoom(3); // Lab
-        Item healthKit = lab.getInventory().getItem(0);
+        Item healthKit = lab.getInventory().getItem("A packet filled with single-use health stims");
 
         assertNotNull(healthKit);
         assertTrue(healthKit instanceof ItemConsumables);
@@ -66,7 +66,7 @@ public class GameEngineTest {
     @Test
     public void testOxygenTankExistsInBasement() {
         Room basement = testEngine.getRoom(4); // Basement
-        Item oxygenTank = basement.getInventory().getItem(0);
+        Item oxygenTank = basement.getInventory().getItem("A sizeable oxygen tank. Great for longer trips underwater");
 
         assertNotNull(oxygenTank);
         assertTrue(oxygenTank instanceof ItemConsumables);

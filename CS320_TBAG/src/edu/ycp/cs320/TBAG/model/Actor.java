@@ -3,6 +3,7 @@ package edu.ycp.cs320.TBAG.model;
 public class Actor {
 	private int actorID, roomID, inventoryID, health;
 	private String actorName;
+	private Inventory inventory;
 
 	// Constructor
 	public Actor(int actorID, int roomID, int inventoryID, int health, String actorName) {
@@ -11,10 +12,8 @@ public class Actor {
 		this.inventoryID = inventoryID;
 		this.health = health;
 		this.actorName = actorName;
-			
+		this.inventory = new Inventory();
 	}
-	
-	public Actor() {}
 
 	//Set Methods
 	public void setHealth(int health) {
@@ -36,6 +35,10 @@ public class Actor {
 	public void setActorName(String actorName) {
 	    this.actorName = actorName;
 	}
+	
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
+	}
 
 	//Get Methods
 	public Integer getHealth() {
@@ -56,5 +59,9 @@ public class Actor {
 	
 	public String getActorName() {
 	    return actorName;
+	}
+	
+	public Inventory getInventory() {
+		return inventory;
 	}
 }

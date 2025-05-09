@@ -17,6 +17,7 @@ public class Room {
 	
 	public Room() {
 		this.hasVisited = false;
+		inventory = new Inventory();
 		connections = new TreeMap<>();
 		NPCS = new ArrayList<NPC>();
 	}
@@ -97,5 +98,8 @@ public class Room {
 	
 	public void removeNPC(int index) {
 		NPCS.remove(index);
+	}
+	public NPC getNPC(int index) {
+		return NPCS.get(index);
 	}
 }
