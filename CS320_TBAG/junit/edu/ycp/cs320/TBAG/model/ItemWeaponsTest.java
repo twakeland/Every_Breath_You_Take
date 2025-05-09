@@ -12,7 +12,7 @@ public class ItemWeaponsTest {
 
     @Before
     public void setUp() {
-        axe = new ItemWeapons("Axe", 2, 15, "A rusty axe", 10);
+        axe = new ItemWeapons(2, 15, "A rusty axe", 10);
     }
 
     @Test

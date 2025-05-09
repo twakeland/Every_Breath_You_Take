@@ -99,4 +99,7 @@ public class Room {
 	public void removeNPC(int index) {
 		NPCS.remove(index);
 	}
+	public NPC getNPC(int index) {
+		return NPCS.get(index);
+	}
 }
