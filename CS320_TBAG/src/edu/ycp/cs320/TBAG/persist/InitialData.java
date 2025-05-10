@@ -70,4 +70,31 @@ public class InitialData {
 			readItems.close();
 		}
 	}
+	
+	public static List<Inventory> getInventories() throws IOException {
+		List<Inventory> inventoryList = new ArrayList<Inventory>();
+		ReadCSV readInventories = new ReadCSV("inventories.csv");
+		try {
+			// auto-generated primary key for authors table
+			Integer inventoryId = 1;
+			while (true) {
+				List<String> tuple = readInventories.next();
+				if (tuple == null) {
+					break;
+				}
+				Iterator<String> i = tuple.iterator();
+				Inventory inventory = new Inventory();
+				item.setItemId(itemId++);	
+				item.setItemName(i.next());
+				item.setUses(Integer.parseInt(i.next()));
+				item.setValue(Integer.parseInt(i.next()));
+				item.setItemType(i.next());
+				item.setDescription(i.next());
+				itemList.add(item);
+			}
+			return itemList;
+		} finally {
+			readItems.close();
+		}
+	}
 }
