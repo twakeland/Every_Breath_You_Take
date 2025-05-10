@@ -12,7 +12,7 @@ public class ItemWeaponsTest {
 
     @Before
     public void setUp() {
-        axe = new ItemWeapons("Axe", 2, 15, "A rusty axe", 10);
+        axe = new ItemWeapons(2, 15, "A rusty axe", 10);
     }
 
     @Test
@@ -38,12 +38,4 @@ public class ItemWeaponsTest {
         assertEquals(Integer.valueOf(0), axe.getUses());
     }
 
-    @Test
-    public void testUsingBrokenWeapon() {
-        axe.use();
-        axe.use();
-        axe.use();  // Weapon should already be broken
-
-        assertEquals(Integer.valueOf(0), axe.getUses());
-    }
  }

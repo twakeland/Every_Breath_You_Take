@@ -1,9 +1,9 @@
 package edu.ycp.cs320.TBAG.model;
 
 public class ItemConsumables extends Item {
-    private Integer healingAmount;
+    private int healingAmount;
 
-    public ItemConsumables() {
+    public ItemConsumables( int healingAmount) {
         super();
     }
 

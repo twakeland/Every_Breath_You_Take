@@ -2,9 +2,9 @@ package edu.ycp.cs320.TBAG.model;
 
 public class Item {
 	private Integer itemID, uses, value;
-	private String itemDescription, itemName;
+	private String itemDescription, itemName,itemType;
 
-	public Item(String itemName, int uses, int value, String itemDescription) {
+	public Item() {
 		
 	}
 	
@@ -38,6 +38,14 @@ public class Item {
 	
 	public Integer getValue() {
 	    return value;
+	}
+	
+	public void setItemType(String itemType) {
+		this.itemType = itemType;
+	}
+	
+	public String getItemType() {
+		return itemType;
 	}
 
 	public void setDescription(String itemDescription) {

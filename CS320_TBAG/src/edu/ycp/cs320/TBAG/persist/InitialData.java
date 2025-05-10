@@ -43,4 +43,31 @@ public class InitialData {
 			readConnections.close();
 		}
 	}
+	
+	public static List<Item> getItems() throws IOException {
+		List<Item> itemList = new ArrayList<Item>();
+		ReadCSV readItems = new ReadCSV("items.csv");
+		try {
+			// auto-generated primary key for authors table
+			Integer itemId = 1;
+			while (true) {
+				List<String> tuple = readItems.next();
+				if (tuple == null) {
+					break;
+				}
+				Iterator<String> i = tuple.iterator();
+				Item item = new Item();
+				item.setItemId(itemId++);	
+				item.setItemName(i.next());
+				item.setUses(Integer.parseInt(i.next()));
+				item.setValue(Integer.parseInt(i.next()));
+				item.setItemType(i.next());
+				item.setDescription(i.next());
+				itemList.add(item);
+			}
+			return itemList;
+		} finally {
+			readItems.close();
+		}
+	}
 }
