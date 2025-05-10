@@ -8,18 +8,15 @@ import java.util.TreeMap;
 
 public class Room {
 	private Integer roomID;
-	private String shortDesc, longDesc;
+	private Integer inventoryID;
+	private String roomName, shortDesc, longDesc;
 	private Inventory inventory;
 	private Boolean hasVisited;
 	private Map<String, Integer> connections;
 	public ArrayList<NPC> NPCS;
 	
-	public Room(Integer roomID, String shortDesc, String longDesc) {
-		this.roomID = roomID;
-		this.shortDesc = shortDesc;
-		this.longDesc = longDesc;
+	public Room() {
 		this.hasVisited = false;
-		inventory = new Inventory(10);
 		connections = new TreeMap<>();
 		NPCS = new ArrayList<NPC>();
 	}
@@ -33,12 +30,28 @@ public class Room {
 		}
 	}
 	
-	public void setRoomID(Integer roomID) {
+	public void setRoomId(Integer roomID) {
 		this.roomID = roomID;
 	}
 	
-	public int getRoomID() {
+	public int getRoomId() {
 		return roomID;
+	}
+	
+	public void setInventoryId(Integer inventoryID) {
+		this.inventoryID = inventoryID;
+	}
+	
+	public int getInventoryId() {
+		return inventoryID;
+	}
+	
+	public void setRoomName(String roomName) {
+		this.roomName = roomName;
+	}
+	
+	public String getRoomName() {
+		return roomName;
 	}
 	
 	public void setShortDesc(String shortDesc) {

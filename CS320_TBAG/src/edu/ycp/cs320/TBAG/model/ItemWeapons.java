@@ -3,9 +3,8 @@ package edu.ycp.cs320.TBAG.model;
 public class ItemWeapons extends Item {
     private Integer damage;
 
-    public ItemWeapons(String itemName, Integer uses, Integer value, String itemDescription, Integer damage) {
-        super(itemName, uses, value, itemDescription);
-        this.damage = damage;
+    public ItemWeapons() {
+        super();
     }
 
     public void setDamage(int damage) {

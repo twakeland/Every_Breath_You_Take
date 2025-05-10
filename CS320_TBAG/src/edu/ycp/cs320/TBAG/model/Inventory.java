@@ -3,60 +3,43 @@ package edu.ycp.cs320.TBAG.model;
 import java.util.ArrayList;
 
 public class Inventory {
-    private int inventorySize;
-    private ArrayList<Item> items;
+	private int inventoryId;
+	private ArrayList<Integer> items;
 
-    public Inventory(int inventorySize) {
-        this.inventorySize = inventorySize;
-        items = new ArrayList<>();
-    }
-    
-    public boolean isEmpty() {
-    	return items.isEmpty();
-    }
+	public Inventory() {
+		items = new ArrayList<Integer>();
+	}
 
-    public void setInvSize(int inventorySize) {
-        this.inventorySize = inventorySize;
-    }
+	public void setInventoryId(int inventoryId) {
+	    this.inventoryId = inventoryId;
+	}
 
-    public int getInvSize() {
-        return inventorySize;
-    }
+	public int getInventoryId() {
+	    return inventoryId;
+	}
+	
+	public ArrayList<Integer> getItems(){
+		return items;
+	}
 
-    public void addItem(Item item) {
-        items.add(item);
-    }
+	public void addItem(Integer item) {
+	    items.add(item);
+	}
 
-    public void removeItem(int index) {
-        if (index >= 0 && index < items.size()) {
-            items.remove(index);
-        }
-    }
-    
-    public int getNumItems() {
-    	return items.size();
-    }
-
-    public boolean contains(Item searchItem) {
-        return items.contains(searchItem);
-    }
-    
-    public Item getItem(int index) {
-    	return items.get(index);
-    }
-    
-    public int getItemIndex(Item item) {
-    	return items.indexOf(item);
-    }
-    
-    
-    // New method to get an item by description
-    public Item getItemByString(String description) {
-        for (Item item : items) {
-            if (item.getDescription().equalsIgnoreCase(description)) {
-                return item;
-            }
-        }
-        return null;
-    }
+	public Integer removeItem(int index) {
+	    return items.remove(index);
+	}
+	
+	public Integer getItem(int index) {
+		return items.get(index);
+	}
+	
+	public boolean contains(Integer searchItem) {
+	    if(items.contains(searchItem)) {
+	      return true;
+	    }
+	    else {
+	      return false;
+	    }
+	}
 }
