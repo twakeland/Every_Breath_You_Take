@@ -12,8 +12,8 @@ public class NPC extends Actor{
 	
 	
 	
-	public NPC(int health, int location, boolean isAttackable, String attackQuip, String leaveQuip) {
-	    super(health, location);  // Calls Actor constructor
+	public NPC(int actorID, int roomID, int inventoryID, int health, String actorName, boolean isAttackable, String attackQuip, String leaveQuip) {
+	    super(actorID, roomID, inventoryID, health, actorName);  // Calls Actor constructor
 	    this.isAttackable = isAttackable;
 	    this.attackQuip = attackQuip;
 	    this.leaveQuip = leaveQuip;
@@ -23,8 +23,8 @@ public class NPC extends Actor{
 	    
 	    }
 	
-	public NPC(int health, int location, boolean isAttackable, String attackQuip, String leaveQuip, String questStartQuip, String questFinQuip, Item questItem) {
-	    super(health, location);  // Calls Actor constructor
+	public NPC(int actorID, int roomID, int inventoryID, int health, String actorName, boolean isAttackable, String attackQuip, String leaveQuip, String questStartQuip, String questFinQuip, Item questItem) {
+	    super(actorID, roomID, inventoryID, health, actorName);  // Calls Actor constructor
 	    this.isAttackable = isAttackable;
 	    this.attackQuip = attackQuip;
 	    this.leaveQuip = leaveQuip;

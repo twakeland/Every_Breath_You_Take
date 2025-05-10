@@ -25,17 +25,13 @@ public class GameEngine {
 		
 		//Temp addNPC to hallway
 		tempNPC = new NPC(2, 2, 2, 50, "temp", false, "A mysterious stranger stands in the corner, his face masked by shadows.");
-		db.findRoomByRoomId(2).addNPC(tempNPC);
-		
-		axe = new Item("Axe", 5, 12, "A worn axe used to break down wooden barricades");
-		healthKit = new Item("Health Kit", 5, 20, "A packet filled with single-use health stims");
-		oxygenTank = new Item("Oxygen Tank", 0, 35, "A sizeable oxygen tank. Great for longer trips underwater");		
+		db.findRoomByRoomId(2).addNPC(tempNPC);		
 		
 		db.findRoomByRoomId(2).getInventory().addItem(axe);
 		db.findRoomByRoomId(3).getInventory().addItem(healthKit);
 		db.findRoomByRoomId(4).getInventory().addItem(oxygenTank);
 		
-		user = new Player(1, 1, 1, 100, "player");
+		user = new Player(1, 1, 1, 100, "player", null);
 		db.findRoomByRoomId(1).setHasVisited(true);
 		return db.findRoomByRoomId(1).getLongDesc();
 	}
@@ -104,21 +100,5 @@ public class GameEngine {
 	
 	public void moveActor(Integer roomID) {
 		user.setRoomId(roomID);
-	}
-	
-	public Room getRoom(Integer roomID) {
-		if (roomID == 1) {
-			return start;
-		}
-		
-		else if (roomID == 2) {
-			return hallway;
-		}
-		
-		else if (roomID == 3) {
-			return lab;
-		}
-		
-		return basement;
 	}
 }
