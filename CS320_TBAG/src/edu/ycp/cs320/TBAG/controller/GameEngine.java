@@ -23,9 +23,11 @@ public class GameEngine {
 		DatabaseProvider.setInstance(new DerbyDatabase());
 		IDatabase db = DatabaseProvider.getInstance();
 		
-		//Temp addNPC to hallway
-		tempNPC = new NPC(2, 2, 2, 50, "temp", false, "A mysterious stranger stands in the corner, his face masked by shadows.");
-		db.findRoomByRoomId(2).addNPC(tempNPC);		
+		//Temporary addNPC to hallway
+		Item tempQuestItem = new Item();
+		lab.getInventory().addItem(tempQuestItem);
+		tempNPC = new NPC(2, 2, 7, 50, "Stranger", true, "You punch the stranger in the throat for no reason. \n\"Have at thee!\" he yells, readying his weapon.", "You leave the stranger to his shenanigans.", "You wouldn't happen to have a shiny rock on you?", "You remove the shiny rock you found and hand it to the stranger. His eyes shine with happiness.", tempQuestItem);
+		hallway.addNPC(tempNPC);	
 		
 		db.findRoomByRoomId(2).getInventory().addItem(axe);
 		db.findRoomByRoomId(3).getInventory().addItem(healthKit);
@@ -53,7 +55,7 @@ public class GameEngine {
 					System.out.println(db.findRoomByRoomId(user.getRoomId()).containsNPCS());
 					if(db.findRoomByRoomId(user.getRoomId()).containsNPCS()){
 						String tempString = db.findRoomByRoomId(user.getRoomId()).getLongDesc();
-						tempString += "\n" + db.findRoomByRoomId(user.getRoomId()).NPCS.get(0).getTempConvo();
+						//tempString += "\n" + db.findRoomByRoomId(user.getRoomId()).NPCS.get(0).getTempConvo();
 						
 						return tempString;
 					}

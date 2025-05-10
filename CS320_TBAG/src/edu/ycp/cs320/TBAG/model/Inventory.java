@@ -21,7 +21,6 @@ public class Inventory {
         if (index >= 0 && index < items.size()) {
             return items.remove(index);
         }
-        
         return null;
     }
 
