@@ -17,6 +17,7 @@ public class Room {
 	
 	public Room() {
 		this.hasVisited = false;
+		inventory = new Inventory();
 		connections = new TreeMap<>();
 		NPCS = new ArrayList<NPC>();
 	}
@@ -80,6 +81,14 @@ public class Room {
 	
 	public Inventory getInventory() {
 		return this.inventory;
+	}
+	
+	public void setConnections(Map<String, Integer> connections) {
+		this.connections = connections;
+	}
+	
+	public Map<String, Integer> getConnections() {
+		return this.connections;
 	}
 	
 	public void makeConnection(String direction, Integer connectionID) {

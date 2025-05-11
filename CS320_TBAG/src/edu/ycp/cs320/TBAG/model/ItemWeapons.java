@@ -1,9 +1,9 @@
 package edu.ycp.cs320.TBAG.model;
 
 public class ItemWeapons extends Item {
-    private Integer damage;
+    private int damage;
 
-    public ItemWeapons() {
+    public ItemWeapons( int damage) {
         super();
     }
 

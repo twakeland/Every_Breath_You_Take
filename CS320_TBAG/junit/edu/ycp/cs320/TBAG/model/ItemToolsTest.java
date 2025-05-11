@@ -5,14 +5,14 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.ycp.cs320.TBAG.model.ItemWeapons;
+import edu.ycp.cs320.TBAG.model.ItemTools;
 
 public class ItemToolsTest {
 	private ItemTools hammer;
 
     @Before
     public void setUp() {
-        hammer = new ItemTools(6, 15, "A rusty hammer with a wooden handle", 15);
+        hammer = new ItemTools("Rusty Hammer", 6, 15, "A rusty hammer with a wooden handle", 15);
     }
 
     @Test
