@@ -1,11 +1,16 @@
 package edu.ycp.cs320.TBAG.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import edu.ycp.cs320.TBAG.model.Room;
+import edu.ycp.cs320.TBAG.model.Actor;
 import edu.ycp.cs320.TBAG.model.Item;
 import edu.ycp.cs320.TBAG.model.ItemWeapons;
 import edu.ycp.cs320.TBAG.model.ItemConsumables;
 import edu.ycp.cs320.TBAG.model.Player;
 import edu.ycp.cs320.TBAG.model.NPC;
+import edu.ycp.cs320.TBAG.model.Pair;
 import edu.ycp.cs320.TBAG.persist.DatabaseProvider;
 import edu.ycp.cs320.TBAG.persist.IDatabase;
 import edu.ycp.cs320.TBAG.persist.FakeDatabase;
@@ -42,6 +47,51 @@ public class GameEngine {
 		DatabaseProvider.setInstance(new DerbyDatabase());
 		IDatabase db = DatabaseProvider.getInstance();
 		
+		Room currentRoom = db.findRoomByRoomId(user.getRoomId());
+		
+		 // DIALOG MODE
+	    if (user.isInDialog()) {
+	        List<Pair<Room, Actor>> actorPairs = db.findActorsInRoom(currentRoom);
+	        if (actorPairs.isEmpty()) {
+	            return "There's no one to talk to.";
+	        }
+
+	        NPC target = (NPC) actorPairs.get(0).getRight(); // Assuming safe cast
+
+	        if (command.equalsIgnoreCase("talk")) {
+	            return "Talk WIP";
+	        } 
+	        else if (command.equalsIgnoreCase("give item")) {
+	            Item questItem = target.getQuestItem();
+	            if (questItem != null && db.findItemInInventory(user.getInventory()).contains(questItem)) {
+	                int tempIndex = user.getInventory().getItemIndex(questItem);
+	                user.getInventory().removeItem(tempIndex);
+	                return target.getQuestFinQuip();
+	            } 
+	            else {
+	                return "They have no need for anything you have.";
+	            }
+	        } 
+	        else if (command.equalsIgnoreCase("attack")) {
+	            if (target.getAttackable()) {
+	                user.setDialog(false);
+	                System.out.println("Player begins combat with NPC");
+	                return target.getAttackQuip();
+	            } 
+	            else {
+	                return "This character cannot be attacked!";
+	            }
+	        } 
+	        else if (command.equalsIgnoreCase("leave")) {
+	            user.setDialog(false);
+	            return target.getLeaveQuip();
+	        } 
+	        else {
+	            return "Error, command unknown";
+	        }
+	    }
+		
+		//MOVEMENT MODE
 		if(command.equalsIgnoreCase("north") || command.equalsIgnoreCase("south") || command.equalsIgnoreCase("west") || command.equalsIgnoreCase("east") || command.equalsIgnoreCase("up") || command.equalsIgnoreCase("down")) {
 			if(db.findRoomByRoomId(user.getRoomId()).getConnection(command) != null) {
 				moveActor(db.findRoomByRoomId(user.getRoomId()).getConnection(command));
@@ -51,24 +101,24 @@ public class GameEngine {
 				}
 				else {
 					db.findRoomByRoomId(user.getRoomId()).setHasVisited(true);
-					//Good lord please ignore how barebones this convo system is so far-->
+					
 					System.out.println(db.findRoomByRoomId(user.getRoomId()).containsNPCS());
-					if(db.findRoomByRoomId(user.getRoomId()).containsNPCS()){
-						String tempString = db.findRoomByRoomId(user.getRoomId()).getLongDesc();
-						//tempString += "\n" + db.findRoomByRoomId(user.getRoomId()).NPCS.get(0).getTempConvo();
-						
-						return tempString;
-					}
 					
-					System.out.println("No NPCS detected, initial descr overridden");
 					return db.findRoomByRoomId(user.getRoomId()).getLongDesc();
-					
 				}
 			}
 			else {
 				return "You can't go that way";
 			}
 			
+		}
+		
+		if(command.equalsIgnoreCase("approach") && currentRoom.containsNPCS()) {
+			user.setDialog(true);
+			return "!!WIP!! You walk up to the NPC";
+		}
+		else if (command.equalsIgnoreCase("approach")) {
+			return "There is no one in the room to talk to.";
 		}
 		
 		if(command.equalsIgnoreCase("pick up")) {
