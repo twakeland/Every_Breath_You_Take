@@ -104,17 +104,65 @@ public class DerbyDatabase implements IDatabase {
 					while (resultSet.next()) {
 						found = true;
 						
-						// create new Room object
+						// create new Map object
 						// retrieve attributes from resultSet starting with index 1
 						loadConnections(connections, resultSet, 1);
 					}
 					
 					// check if the title was found
 					if (!found) {
-						System.out.println("<" + roomId + "> was not found in the books table");
+						System.out.println("<" + roomId + "> was not found in the connections table");
 					}
 					
 					return connections;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public Inventory findInventoryByInventoryId(final int inventoryId) {
+		return executeTransaction(new Transaction<Inventory>() {
+			@Override
+			public Inventory execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					// retrieve all attributes from Rooms table
+					stmt = conn.prepareStatement(
+							"select inventories.item_id " +
+							"  from inventories " +
+							" where inventories.inventory_id = ? "
+					);
+					stmt.setInt(1, inventoryId);
+					
+					resultSet = stmt.executeQuery();
+					
+					Inventory inventory = new Inventory();
+					
+					inventory.setInventoryId(inventoryId);
+					
+					// for testing that a result was returned
+					Boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						// create new Map object
+						// retrieve attributes from resultSet starting with index 1
+						loadInventory(inventory, resultSet, 1);
+					}
+					
+					// check if the title was found
+					if (!found) {
+						System.out.println("<" + inventoryId + "> was not found in the inventories table");
+					}
+					
+					return inventory;
 				} finally {
 					DBUtil.closeQuietly(resultSet);
 					DBUtil.closeQuietly(stmt);
@@ -177,7 +225,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	private void loadInventory(Inventory inventory, ResultSet resultSet, int index) throws SQLException {
-		
+		inventory.addItem(index++);
 	}
 	
 	private void loadRoom(Room room, ResultSet resultSet, int index) throws SQLException {
