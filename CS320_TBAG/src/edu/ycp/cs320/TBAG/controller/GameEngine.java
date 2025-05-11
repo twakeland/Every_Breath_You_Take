@@ -25,13 +25,9 @@ public class GameEngine {
 		
 		//Temporary addNPC to hallway
 		Item tempQuestItem = new Item();
-		lab.getInventory().addItem(tempQuestItem);
+		//lab.getInventory().addItem(tempQuestItem);
 		tempNPC = new NPC(2, 2, 7, 50, "Stranger", true, "You punch the stranger in the throat for no reason. \n\"Have at thee!\" he yells, readying his weapon.", "You leave the stranger to his shenanigans.", "You wouldn't happen to have a shiny rock on you?", "You remove the shiny rock you found and hand it to the stranger. His eyes shine with happiness.", tempQuestItem);
-		hallway.addNPC(tempNPC);	
-		
-		db.findRoomByRoomId(2).getInventory().addItem(axe);
-		db.findRoomByRoomId(3).getInventory().addItem(healthKit);
-		db.findRoomByRoomId(4).getInventory().addItem(oxygenTank);
+		//hallway.addNPC(tempNPC);	
 		
 		user = new Player(1, 1, 1, 100, "player", null);
 		db.findRoomByRoomId(1).setHasVisited(true);
@@ -75,7 +71,7 @@ public class GameEngine {
 			if(db.findRoomByRoomId(user.getRoomId()).getInventory().getItems().size() != 0) {
 				user.getInventory().addItem(db.findRoomByRoomId(user.getRoomId()).getInventory().removeItem(0));
 				Integer size = user.getInventory().getItems().size();
-				return "You picked up the " + user.getInventory().getItem(size - 1).getItemName();
+				return "You picked up the " + "null";
 			}
 			
 			return "There is nothing to pick up";
@@ -92,7 +88,7 @@ public class GameEngine {
 				return "There's nothing in your inventory";
 			}
 			for(int i = 0; i < size; i++) {
-				items += user.getInventory().getItem(i).getItemName() + "\n";
+				items += "null";
 			}
 			return items;
 		}
