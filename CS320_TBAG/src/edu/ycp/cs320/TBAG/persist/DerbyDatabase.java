@@ -119,6 +119,105 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	@Override
+    public List<Item> findAllItems() {
+        return executeTransaction(new Transaction<List<Item>>() {
+            @Override
+            public List<Item> execute(Connection conn) throws SQLException {
+                PreparedStatement stmt = null;
+                ResultSet resultSet = null;
+
+                try {
+                    stmt = conn.prepareStatement("SELECT items.* FROM items");
+                    resultSet = stmt.executeQuery();
+
+                    List<Item> items = new ArrayList<>();
+                    while (resultSet.next()) {
+                        Item item = new Item();
+                        loadItem(item, resultSet, 1);
+                        items.add(item);
+                    }
+                    return items;
+                } finally {
+                    DBUtil.closeQuietly(resultSet);
+                    DBUtil.closeQuietly(stmt);
+                }
+            }
+        });
+    }
+	
+	
+	@Override
+	public List<Pair<Inventory,Item>> findItemInInventory(final Inventory inventory) {
+	    return executeTransaction(new Transaction<List<Pair<Inventory,Item>>>() {
+	        @Override
+	        public List<Pair<Inventory,Item>> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt     = null;
+	            ResultSet        resultSet = null;
+	            
+	            try {
+	                // select every column from items where the FK matches
+	                stmt = conn.prepareStatement(
+	                    "SELECT items.* " +
+	                    "  FROM items " +
+	                    " WHERE inventory_id = ?"
+	                );
+	                stmt.setInt(1, inventory.getInventoryId());
+	                resultSet = stmt.executeQuery();
+	                
+	                List<Pair<Inventory,Item>> results = new ArrayList<>();
+	                while (resultSet.next()) {
+	                    // build the Item
+	                    Item item = new Item();
+	                    loadItem(item, resultSet, 1);
+	                    
+	                    // pair it with the passed–in Inventory
+	                    results.add(new Pair<>(inventory, item));
+	                }
+	                
+	                return results;
+	            } finally {
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+	}
+	
+	
+	@Override
+	public List<Item> findItemsByItemName(final String itemName) {
+	    return executeTransaction(new Transaction<List<Item>>() {
+	        @Override
+	        public List<Item> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt     = null;
+	            ResultSet        resultSet = null;
+
+	            try {
+	                // select every column from items where the name matches
+	                stmt = conn.prepareStatement(
+	                    "SELECT items.* " +
+	                    "  FROM items " +
+	                    " WHERE item_name = ?"
+	                );
+	                stmt.setString(1, itemName);
+	                resultSet = stmt.executeQuery();
+
+	                List<Item> items = new ArrayList<>();
+	                while (resultSet.next()) {
+	                    Item item = new Item();
+	                    loadItem(item, resultSet, 1);
+	                    items.add(item);
+	                }
+	                return items;
+	            } finally {
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+	}
+	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
 			return doExecuteTransaction(txn);
