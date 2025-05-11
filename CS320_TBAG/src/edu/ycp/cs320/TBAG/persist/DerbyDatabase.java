@@ -176,6 +176,10 @@ public class DerbyDatabase implements IDatabase {
 		return conn;
 	}
 	
+	private void loadInventory(Inventory inventory, ResultSet resultSet, int index) throws SQLException {
+		
+	}
+	
 	private void loadRoom(Room room, ResultSet resultSet, int index) throws SQLException {
 		room.setRoomId(resultSet.getInt(index++));
 		room.setInventoryId(resultSet.getInt(index++));
@@ -194,8 +198,17 @@ public class DerbyDatabase implements IDatabase {
 			public Boolean execute(Connection conn) throws SQLException {
 				PreparedStatement stmt1 = null;
 				PreparedStatement stmt2 = null;
+				PreparedStatement stmt3 = null;
 				
 				try {
+					
+					stmt3 = conn.prepareStatement(
+							"create table inventories (" +
+							"	inventory_id integer, " +									
+							"	item_id integer " +
+							")"
+					);
+					stmt3.executeUpdate();
 					
 					stmt1 = conn.prepareStatement(
 							"create table rooms (" +
@@ -222,6 +235,7 @@ public class DerbyDatabase implements IDatabase {
 				} finally {
 					DBUtil.closeQuietly(stmt1);
 					DBUtil.closeQuietly(stmt2);
+					DBUtil.closeQuietly(stmt3);
 				}
 			}
 		});
@@ -232,8 +246,10 @@ public class DerbyDatabase implements IDatabase {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 				List<Room> roomList;
+				List<Inventory> inventoryList;
 				
 				try {
+					inventoryList = InitialData.getInventories();
 					roomList = InitialData.getRooms();
 				} catch (IOException e) {
 					throw new SQLException("Couldn't read initial data", e);
@@ -241,8 +257,19 @@ public class DerbyDatabase implements IDatabase {
 
 				PreparedStatement insertRoom = null;
 				PreparedStatement insertConnection = null;
+				PreparedStatement insertInventory = null;
 				
 				try {
+					insertInventory = conn.prepareStatement("insert into inventories (inventory_id, item_id) values (?, ?)");
+					for (Inventory inventory : inventoryList) {
+						ArrayList<Integer> items = new ArrayList<>();
+						for (int itemId : items) {
+							insertInventory.setInt(1, inventory.getInventoryId());
+							insertInventory.setInt(2, itemId);
+							insertInventory.addBatch();
+						}
+					}
+					insertInventory.executeBatch();
 					
 					insertRoom = conn.prepareStatement("insert into rooms (inventory_id, roomName, shortDesc, longDesc) values (?, ?, ?, ?)");
 					for (Room room : roomList) {
@@ -269,6 +296,8 @@ public class DerbyDatabase implements IDatabase {
 					return true;
 				} finally {
 					DBUtil.closeQuietly(insertRoom);
+					DBUtil.closeQuietly(insertConnection);
+					DBUtil.closeQuietly(insertInventory);
 				}
 			}
 		});

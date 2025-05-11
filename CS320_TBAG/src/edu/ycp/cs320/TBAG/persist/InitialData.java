@@ -13,7 +13,7 @@ public class InitialData {
 		ReadCSV readRooms = new ReadCSV("rooms.csv");
 		ReadCSV readConnections = new ReadCSV("connections.csv");
 		try {
-			// auto-generated primary key for authors table
+			// auto-generated primary key for rooms table
 			Integer roomId = 1;
 			while (true) {
 				List<String> tuple = readRooms.next();
@@ -48,7 +48,7 @@ public class InitialData {
 		List<Item> itemList = new ArrayList<Item>();
 		ReadCSV readItems = new ReadCSV("items.csv");
 		try {
-			// auto-generated primary key for authors table
+			// auto-generated primary key for items table
 			Integer itemId = 1;
 			while (true) {
 				List<String> tuple = readItems.next();
@@ -75,7 +75,7 @@ public class InitialData {
 		List<Inventory> inventoryList = new ArrayList<Inventory>();
 		ReadCSV readInventories = new ReadCSV("inventories.csv");
 		try {
-			// auto-generated primary key for authors table
+			// auto-generated primary key for inventories table
 			Integer inventoryId = 1;
 			while (true) {
 				List<String> tuple = readInventories.next();
@@ -84,17 +84,18 @@ public class InitialData {
 				}
 				Iterator<String> i = tuple.iterator();
 				Inventory inventory = new Inventory();
-				item.setItemId(itemId++);	
-				item.setItemName(i.next());
-				item.setUses(Integer.parseInt(i.next()));
-				item.setValue(Integer.parseInt(i.next()));
-				item.setItemType(i.next());
-				item.setDescription(i.next());
-				itemList.add(item);
+				inventory.setInventoryId(inventoryId++);
+				while (true) {
+					if(i.hasNext() == false) {
+						break;
+					}
+					inventory.addItem(Integer.parseInt(i.next()));
+				}
+				inventoryList.add(inventory);
 			}
-			return itemList;
+			return inventoryList;
 		} finally {
-			readItems.close();
+			readInventories.close();
 		}
 	}
 }
