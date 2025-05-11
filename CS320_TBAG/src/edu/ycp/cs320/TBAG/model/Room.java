@@ -83,6 +83,14 @@ public class Room {
 		return this.inventory;
 	}
 	
+	public void setConnections(Map<String, Integer> connections) {
+		this.connections = connections;
+	}
+	
+	public Map<String, Integer> getConnections() {
+		return this.connections;
+	}
+	
 	public void makeConnection(String direction, Integer connectionID) {
 		connections.put(direction, connectionID);
 	}

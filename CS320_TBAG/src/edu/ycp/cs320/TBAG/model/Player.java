@@ -7,10 +7,10 @@ public class Player extends Actor{
 
 
 	  // Constructor
-	  public Player(int health, int location, String command) {
-	    super(health, location);  // Calls Actor constructor
+	  public Player(int actorID, int roomID, int inventoryID, int health, String actorName, String command) {
+	    super(actorID, roomID, inventoryID, health, actorName);  // Calls Actor constructor
 	    this.command = command;
-	    playerInventory = new Inventory(10);
+	    playerInventory = new Inventory();
 	    inDialog = false;
 	  }
 

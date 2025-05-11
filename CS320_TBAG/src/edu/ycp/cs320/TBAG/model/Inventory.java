@@ -3,11 +3,10 @@ package edu.ycp.cs320.TBAG.model;
 import java.util.ArrayList;
 
 public class Inventory {
-    private int inventorySize;
-    private ArrayList<Item> items;
+	private int inventoryId;
+    private ArrayList<Integer> items;
 
-    public Inventory(int inventorySize) {
-        this.inventorySize = inventorySize;
+    public Inventory() {
         items = new ArrayList<>();
     }
     
@@ -15,34 +14,43 @@ public class Inventory {
     	return items.isEmpty();
     }
 
-    public void setInvSize(int inventorySize) {
-        this.inventorySize = inventorySize;
+    public void addItem(int itemId) {
+        items.add(itemId);
     }
 
-    public int getInvSize() {
-        return inventorySize;
-    }
-
-    public void addItem(Item item) {
-        items.add(item);
-    }
-
-    public void removeItem(int index) {
+    public int removeItem(int index) {
         if (index >= 0 && index < items.size()) {
-            items.remove(index);
+            return items.remove(index);
         }
+        return 0;
     }
 
-    public boolean contains(Item searchItem) {
-        return items.contains(searchItem);
+    public boolean contains(int itemId) {
+        return items.contains(itemId);
     }
     
-    public Item getItem(int index) {
+    public int getItem(int index) {
     	return items.get(index);
     }
     
-    public int getItemIndex(Item item) {
-    	return items.indexOf(item);
+    public int getItemIndex(int itemId) {
+    	return items.indexOf(itemId);
+    }
+    
+    public ArrayList<Integer> getItems() {
+    	return items;
+    }
+    
+    public void setItems(ArrayList<Integer> items) {
+    	this.items = items;
+    }
+    
+    public int getInventoryId() {
+    	return inventoryId;
+    }
+    
+    public void setInventoryId(int inventoryId) {
+    	this.inventoryId = inventoryId;
     }
     
     
