@@ -98,4 +98,30 @@ public class InitialData {
 			readInventories.close();
 		}
 	}
+	
+	public static List<Actor> getActors() throws IOException {
+		List<Actor> actorList = new ArrayList<Actor>();
+		ReadCSV readActors = new ReadCSV("actors.csv");
+		try {
+			// auto-generated primary key for items table
+			Integer actorId = 1;
+			while (true) {
+				List<String> tuple = readActors.next();
+				if (tuple == null) {
+					break;
+				}
+				Iterator<String> i = tuple.iterator();
+				Actor actor = new Actor();
+				actor.setActorId(actorId++);
+				actor.setRoomId(Integer.parseInt(i.next()));
+				actor.setInventoryId(Integer.parseInt(i.next()));
+				actor.setHealth(Integer.parseInt(i.next()));
+				actor.setActorName(i.next());
+				actorList.add(actor);
+			}
+			return actorList;
+		} finally {
+			readActors.close();
+		}
+	}
 }

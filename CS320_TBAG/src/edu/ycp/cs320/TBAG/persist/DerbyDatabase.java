@@ -280,6 +280,107 @@ public class DerbyDatabase implements IDatabase {
 	    });
 	}
 	
+	@Override
+	public Actor findActorByActorId(final int actorId) {
+		return executeTransaction(new Transaction<Actor>() {
+			@Override
+			public Actor execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					// retrieve all attributes from Items table
+					stmt = conn.prepareStatement(
+							"select actors.* " +
+							"  from actors " +
+							" where actor_id = ?"
+					);
+					stmt.setInt(1, actorId);
+					
+					resultSet = stmt.executeQuery();
+					
+					Actor actor = new Actor();
+					
+					// for testing that a result was returned
+					Boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						// create new Room object
+						// retrieve attributes from resultSet starting with index 1
+						loadActor(actor, resultSet, 1);
+					}
+					
+					// check if the title was found
+					if (!found) {
+						System.out.println("<" + actorId + "> was not found in the items table");
+					}
+					
+					return actor;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	@Override
+	public Actor updateActorRoomId(final int actorId, final int roomId) {
+		return executeTransaction(new Transaction<Actor>() {
+			@Override
+			public Actor execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					// retrieve all attributes from Items table
+					stmt = conn.prepareStatement(
+							"update actors " +
+							"  set room_id = ? " +
+							" where actor_id = ?"
+					);
+					stmt.setInt(1, roomId);
+					stmt.setInt(2, actorId);
+					
+					stmt.execute();
+					
+					stmt = conn.prepareStatement(
+							"select actors.* " +
+							"  from actors " +
+							" where actor_id = ?"
+					);
+					stmt.setInt(1, actorId);
+					
+					resultSet = stmt.executeQuery();
+					
+					Actor actor = new Actor();
+					
+					// for testing that a result was returned
+					Boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						// create new Room object
+						// retrieve attributes from resultSet starting with index 1
+						loadActor(actor, resultSet, 1);
+					}
+					
+					// check if the title was found
+					if (!found) {
+						System.out.println("<" + actorId + "> was not found in the items table");
+					}
+					
+					return actor;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
 	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
@@ -334,6 +435,14 @@ public class DerbyDatabase implements IDatabase {
 		return conn;
 	}
 	
+	private void loadActor(Actor actor, ResultSet resultSet, int index) throws SQLException{
+		actor.setActorId(resultSet.getInt(index++));
+		actor.setRoomId(resultSet.getInt(index++));
+		actor.setInventoryId(resultSet.getInt(index++));
+		actor.setHealth(resultSet.getInt(index++));
+		actor.setActorName(resultSet.getString(index++));
+	}
+	
 	private void loadInventory(Inventory inventory, ResultSet resultSet, int index) throws SQLException {
 		inventory.addItem(resultSet.getInt(index++));
 	}
@@ -367,6 +476,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt2 = null;
 				PreparedStatement stmt3 = null;
 				PreparedStatement stmt4 = null;
+				PreparedStatement stmt5 = null;
 				
 				try {
 					stmt1 = conn.prepareStatement(
@@ -412,6 +522,18 @@ public class DerbyDatabase implements IDatabase {
 					);
 					stmt4.executeUpdate();
 					
+					stmt5 = conn.prepareStatement(
+							"create table actors (" +
+							"	actor_id integer primary key " +	
+							"		generated always as identity (start with 1, increment by 1), " +	
+							"	room_id integer constraint room_id references rooms, " +
+							"	inventory_id integer, " +
+							"	health integer, " +
+							"	actorName varchar(40) " +
+							")"
+					);
+					stmt5.executeUpdate();
+					
 						
 					return true;
 				} finally {
@@ -419,6 +541,7 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmt2);
 					DBUtil.closeQuietly(stmt3);
 					DBUtil.closeQuietly(stmt4);
+					DBUtil.closeQuietly(stmt5);
 				}
 			}
 		});
@@ -431,11 +554,13 @@ public class DerbyDatabase implements IDatabase {
 				List<Room> roomList;
 				List<Inventory> inventoryList;
 				List<Item> itemList;
+				List<Actor> actorList;
 				
 				try {
 					inventoryList = InitialData.getInventories();
 					roomList = InitialData.getRooms();
 					itemList = InitialData.getItems();
+					actorList = InitialData.getActors();
 				} catch (IOException e) {
 					throw new SQLException("Couldn't read initial data", e);
 				}
@@ -444,6 +569,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement insertConnection = null;
 				PreparedStatement insertInventory = null;
 				PreparedStatement insertItem   = null;
+				PreparedStatement insertActor = null;
 				
 				try {
 					insertItem = conn.prepareStatement("insert into items (itemName, uses, value, itemType, itemDescription) values (?, ?, ?, ?,?)");
@@ -490,12 +616,23 @@ public class DerbyDatabase implements IDatabase {
 					}
 					insertConnection.executeBatch();
 					
+					insertActor = conn.prepareStatement("insert into actors (room_id, inventory_id, health, actorName) values (?, ?, ?, ?)");
+					for (Actor actor : actorList) {
+						insertActor.setInt(1, actor.getRoomId());
+						insertActor.setInt(2, actor.getInventoryId());
+						insertActor.setInt(3, actor.getHealth());
+						insertActor.setString(4, actor.getActorName());
+						insertActor.addBatch();
+					}
+					insertActor.executeBatch();
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(insertRoom);
 					DBUtil.closeQuietly(insertConnection);
 					DBUtil.closeQuietly(insertInventory);
 					DBUtil.closeQuietly(insertItem);
+					DBUtil.closeQuietly(insertActor);
 				}
 			}
 		});

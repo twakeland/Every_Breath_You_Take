@@ -6,6 +6,10 @@ public class Actor {
 	private Inventory inventory;
 
 	// Constructor
+	public Actor() {
+		this.inventory = new Inventory();
+	}
+	
 	public Actor(int actorID, int roomID, int inventoryID, int health, String actorName) {
 		this.actorID = actorID;
 		this.roomID = roomID;
