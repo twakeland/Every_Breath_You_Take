@@ -1,4 +1,11 @@
-0|start|You're in the starting area|Welcome to the starting area
-2|hallway|You're in a long hallway|The hallway is long and dark. You can see a light in the distance. There is an axe leaning on the wall
-3|lab|You're in the lab|The lab is filled with tons of scientific equipment you don't recognize. There is a medkit on the desk
-4|basement|You're in the basement|The basement is cold and damp, you shouldn't be here. You can see an oxygen tank hidden in the dark
+0|start|You're in your submarine deep underwater inspecting an oil rig. Your rig commander connects to the onboard radio "If anyone is still down there, don't come up. The surface will be uninhabitable soon. The war is ending...". 
+2|trench 1|You're in a shallow trench |The trench is long and dark. You turn on the submarine floodlights. There is an axe resting on a flat rock.
+3|crevice|You're in the crevice| You enter a crevice in the bottom of the trench and see a medkit. You hear static from your radio and the rig commander cuts in "There is a research facility down there with life support, I will send the directions to any survivors down there".
+4|kelp forest|You're in the kelp forest |You enter a green kelp forest the water is murky. You see an oxygen tank being clutched by a long lost diver. 
+5|clearing| You're in the clearing| The kelp forest thins out to an open rocky pit. A strange green glow can be seen coming from a cave entrance.
+6|cave entrance| You're in the cave entrance| A stranger with a green glowstick is sitting by the entrance. Do you wish to speak to them?
+7|cave middle| You're in the middle of the cave| Loud clicking and scraping sounds reverberate throughout the submarine. You are not alone in the cave...
+8|enemy room| You're in the cave with a sea monster| A tentacle appears from a crack and taps the submarine. A leviathan octopus has discovered you. It appears hungry...
+9|cave exit| You're exiting the cave| You see the lab key sitting at the end of the cave.
+10|research facility| You're in the research facility| You see the research facility. A lab keycard is required to enter.
+11|inside research facility| You enter the research facility. There is enough rations to last a year. This should last long enough to avoid the fallout. Only thing to do now is wait... Thank you for playing!
