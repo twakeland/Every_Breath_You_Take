@@ -45,8 +45,16 @@ public class FakeDatabase implements IDatabase {
 		return null;
 	}
 	
+    public List<Item> findItemByItemName(String itemName) {
+        List<Item> results = new ArrayList<>();
+        for (Item item : itemList) {
+            if (item.getItemName().equals(itemName)) {
+                results.add(item);
+            }
+        }
+        return results;
+    }
 	
-
 	public void readInitialData() {
 		try {
 			roomList.addAll(InitialData.getRooms());

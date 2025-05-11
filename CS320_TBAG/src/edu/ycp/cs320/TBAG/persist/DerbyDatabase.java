@@ -171,6 +171,115 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	@Override
+	public Item findItemByItemId(final int itemId) {
+		return executeTransaction(new Transaction<Item>() {
+			@Override
+			public Item execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					// retrieve all attributes from Items table
+					stmt = conn.prepareStatement(
+							"select items.* " +
+							"  from items " +
+							" where item_id = ?"
+					);
+					stmt.setInt(1, itemId);
+					
+					resultSet = stmt.executeQuery();
+					
+					Item item = new Item();
+					
+					// for testing that a result was returned
+					Boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						// create new Room object
+						// retrieve attributes from resultSet starting with index 1
+						loadItem(item, resultSet, 1);
+					}
+					
+					// check if the title was found
+					if (!found) {
+						System.out.println("<" + itemId + "> was not found in the books table");
+					}
+					
+					return item;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public List<Item> findItemByItemName(final String itemName) {
+	    return executeTransaction(new Transaction<List<Item>>() {
+	        @Override
+	        public List<Item> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet        rs   = null;
+	            try {
+	                stmt = conn.prepareStatement(
+	                    "SELECT items.* " +
+	                    "  FROM items " +
+	                    " WHERE item_name = ?"
+	                );
+	                stmt.setString(1, itemName);
+	                rs = stmt.executeQuery();
+
+	                List<Item> items = new ArrayList<>();
+	                while (rs.next()) {
+	                    Item item = new Item();
+	                    loadItem(item, rs, 1);
+	                    items.add(item);
+	                }
+	                return items;
+	            } finally {
+	                DBUtil.closeQuietly(rs);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+	}
+	
+	@Override
+	public List<Pair<Inventory,Item>> findItemInInventory(final Inventory inventory) {
+	    return executeTransaction(new Transaction<List<Pair<Inventory,Item>>>() {
+	        @Override
+	        public List<Pair<Inventory,Item>> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet        rs   = null;
+	            try {
+	                stmt = conn.prepareStatement(
+	                    "SELECT items.* " +
+	                    "  FROM items " +
+	                    " WHERE inventory_id = ?"
+	                );
+	                stmt.setInt(1, inventory.getInventoryId());
+	                rs = stmt.executeQuery();
+
+	                List<Pair<Inventory,Item>> results = new ArrayList<>();
+	                while (rs.next()) {
+	                    Item item = new Item();
+	                    loadItem(item, rs, 1);
+	                    results.add(new Pair<>(inventory, item));
+	                }
+	                return results;
+	            } finally {
+	                DBUtil.closeQuietly(rs);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+	}
+	
+	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
 			return doExecuteTransaction(txn);
@@ -236,6 +345,15 @@ public class DerbyDatabase implements IDatabase {
 		room.setLongDesc(resultSet.getString(index++));
 	}
 	
+	private void loadItem(Item item, ResultSet resultSet, int index) throws SQLException {
+		item.setItemId(resultSet.getInt(index++));
+		item.setItemName(resultSet.getString(index++));
+		item.setValue(resultSet.getInt(index++));
+		item.setUses(resultSet.getInt(index++));
+		item.setItemType(resultSet.getString(index++));
+		item.setDescription(resultSet.getString(index++));
+	}
+	
 	private void loadConnections(Map<String, Integer> connections, ResultSet resultSet, int index) throws SQLException {
 		connections.put(resultSet.getString(index++), resultSet.getInt(index++));
 	}
@@ -247,6 +365,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt1 = null;
 				PreparedStatement stmt2 = null;
 				PreparedStatement stmt3 = null;
+				PreparedStatement stmt4 = null;
 				
 				try {
 					
@@ -278,6 +397,21 @@ public class DerbyDatabase implements IDatabase {
 							")"
 					);
 					stmt2.executeUpdate();
+					
+					stmt4 = conn.prepareStatement(
+							"create table items (" +
+							"	itemId integer primary key " +
+							"		generated always as identity (start with 1, increment by 1), " +	
+							"	itemName varchar(200), " +
+							"	uses integer, " +
+							"	value integer, " +
+							"	itemType varchar(200), " +
+							"	itemDescription varchar(200) " +
+			
+							")"
+					);	
+					stmt4.executeUpdate();
+					
 						
 					return true;
 				} finally {
@@ -295,10 +429,12 @@ public class DerbyDatabase implements IDatabase {
 			public Boolean execute(Connection conn) throws SQLException {
 				List<Room> roomList;
 				List<Inventory> inventoryList;
+				List<Item> itemList;
 				
 				try {
 					inventoryList = InitialData.getInventories();
 					roomList = InitialData.getRooms();
+					itemList = InitialData.getItems();
 				} catch (IOException e) {
 					throw new SQLException("Couldn't read initial data", e);
 				}
@@ -306,6 +442,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement insertRoom = null;
 				PreparedStatement insertConnection = null;
 				PreparedStatement insertInventory = null;
+				PreparedStatement insertItem   = null;
 				
 				try {
 					insertInventory = conn.prepareStatement("insert into inventories (inventory_id, item_id) values (?, ?)");
@@ -341,11 +478,23 @@ public class DerbyDatabase implements IDatabase {
 					}
 					insertConnection.executeBatch();
 					
+					insertItem = conn.prepareStatement("insert into items (itemName, uses, value, itemType, itemDescription) values (?, ?, ?, ?,?)");
+					for (Item item : itemList) {
+						insertItem.setString(1, item.getItemName());
+						insertItem.setInt(2, item.getUses());
+						insertItem.setInt(3, item.getValue());
+						insertItem.setString(4, item.getItemType());
+						insertItem.setString(5, item.getDescription());
+						insertItem.addBatch();
+					}
+					insertItem.executeBatch();
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(insertRoom);
 					DBUtil.closeQuietly(insertConnection);
 					DBUtil.closeQuietly(insertInventory);
+					DBUtil.closeQuietly(insertItem);
 				}
 			}
 		});
