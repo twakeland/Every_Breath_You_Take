@@ -12,8 +12,6 @@ import edu.ycp.cs320.TBAG.persist.FakeDatabase;
 import edu.ycp.cs320.TBAG.persist.DerbyDatabase;
 
 public class GameEngine {
-	private Room start, hallway, lab, basement;
-	private Item axe, healthKit, oxygenTank;
 	private Player user;
 	private NPC tempNPC;
 	
@@ -68,10 +66,11 @@ public class GameEngine {
 		}
 		
 		if(command.equalsIgnoreCase("pick up")) {
-			if(db.findRoomByRoomId(user.getRoomId()).getInventory().getItems().size() != 0) {
-				user.getInventory().addItem(db.findRoomByRoomId(user.getRoomId()).getInventory().removeItem(0));
-				Integer size = user.getInventory().getItems().size();
-				return "You picked up the " + "null";
+			if(db.findInventoryByInventoryId(db.findRoomByRoomId(user.getRoomId()).getInventoryId()).getItems().size() != 0) {
+				int itemId = db.findInventoryByInventoryId(db.findRoomByRoomId(user.getRoomId()).getInventoryId()).removeItem(0);
+				user.getInventory().addItem(itemId);
+				//Integer size = user.getInventory().getItems().size();
+				return "You picked up the " + db.findItemByItemId(itemId).getItemName();
 			}
 			
 			return "There is nothing to pick up";
@@ -88,7 +87,7 @@ public class GameEngine {
 				return "There's nothing in your inventory";
 			}
 			for(int i = 0; i < size; i++) {
-				items += "null";
+				items += db.findItemByItemId(user.getInventory().getItem(i)).getItemName() + "\n";
 			}
 			return items;
 		}

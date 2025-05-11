@@ -135,8 +135,9 @@ public class DerbyDatabase implements IDatabase {
 					// retrieve all attributes from Rooms table
 					stmt = conn.prepareStatement(
 							"select inventories.item_id " +
-							"  from inventories " +
-							" where inventories.inventory_id = ? "
+							"  from inventories, items " +
+							" where inventories.item_id = items.item_id " +
+							" and inventories.inventory_id = ? "
 					);
 					stmt.setInt(1, inventoryId);
 					
@@ -152,7 +153,7 @@ public class DerbyDatabase implements IDatabase {
 					while (resultSet.next()) {
 						found = true;
 						
-						// create new Map object
+						// create new Inventory object
 						// retrieve attributes from resultSet starting with index 1
 						loadInventory(inventory, resultSet, 1);
 					}
@@ -205,7 +206,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					// check if the title was found
 					if (!found) {
-						System.out.println("<" + itemId + "> was not found in the books table");
+						System.out.println("<" + itemId + "> was not found in the items table");
 					}
 					
 					return item;
@@ -334,7 +335,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	private void loadInventory(Inventory inventory, ResultSet resultSet, int index) throws SQLException {
-		inventory.addItem(index++);
+		inventory.addItem(resultSet.getInt(index++));
 	}
 	
 	private void loadRoom(Room room, ResultSet resultSet, int index) throws SQLException {
@@ -368,39 +369,9 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt4 = null;
 				
 				try {
-					
-					stmt3 = conn.prepareStatement(
-							"create table inventories (" +
-							"	inventory_id integer, " +									
-							"	item_id integer " +
-							")"
-					);
-					stmt3.executeUpdate();
-					
 					stmt1 = conn.prepareStatement(
-							"create table rooms (" +
-							"	room_id integer primary key " +
-							"		generated always as identity (start with 1, increment by 1), " +									
-							"	inventory_id integer, " +
-							"	roomName varchar(200), " +
-							"	shortDesc varchar(200), " +
-							"	longDesc varchar(200)" +
-							")"
-					);	
-					stmt1.executeUpdate();
-					
-					stmt2 = conn.prepareStatement(
-							"create table connections (" +
-							"	room_id integer, " +									
-							"	direction varchar(40), " +
-							"	connection_id integer constraint connection_id references rooms " +
-							")"
-					);
-					stmt2.executeUpdate();
-					
-					stmt4 = conn.prepareStatement(
 							"create table items (" +
-							"	itemId integer primary key " +
+							"	item_id integer primary key " +
 							"		generated always as identity (start with 1, increment by 1), " +	
 							"	itemName varchar(200), " +
 							"	uses integer, " +
@@ -410,6 +381,35 @@ public class DerbyDatabase implements IDatabase {
 			
 							")"
 					);	
+					stmt1.executeUpdate();
+					
+					stmt2 = conn.prepareStatement(
+							"create table inventories (" +
+							"	inventory_id integer, " +									
+							"	item_id integer constraint item_id references items" +
+							")"
+					);
+					stmt2.executeUpdate();
+					
+					stmt3 = conn.prepareStatement(
+							"create table rooms (" +
+							"	room_id integer primary key " +
+							"		generated always as identity (start with 1, increment by 1), " +									
+							"	inventory_id integer, " +
+							"	roomName varchar(200), " +
+							"	shortDesc varchar(200), " +
+							"	longDesc varchar(200)" +
+							")"
+					);	
+					stmt3.executeUpdate();
+					
+					stmt4 = conn.prepareStatement(
+							"create table connections (" +
+							"	room_id integer, " +									
+							"	direction varchar(40), " +
+							"	connection_id integer constraint connection_id references rooms " +
+							")"
+					);
 					stmt4.executeUpdate();
 					
 						
@@ -418,6 +418,7 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmt1);
 					DBUtil.closeQuietly(stmt2);
 					DBUtil.closeQuietly(stmt3);
+					DBUtil.closeQuietly(stmt4);
 				}
 			}
 		});
@@ -445,9 +446,20 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement insertItem   = null;
 				
 				try {
+					insertItem = conn.prepareStatement("insert into items (itemName, uses, value, itemType, itemDescription) values (?, ?, ?, ?,?)");
+					for (Item item : itemList) {
+						insertItem.setString(1, item.getItemName());
+						insertItem.setInt(2, item.getUses());
+						insertItem.setInt(3, item.getValue());
+						insertItem.setString(4, item.getItemType());
+						insertItem.setString(5, item.getDescription());
+						insertItem.addBatch();
+					}
+					insertItem.executeBatch();
+					
 					insertInventory = conn.prepareStatement("insert into inventories (inventory_id, item_id) values (?, ?)");
 					for (Inventory inventory : inventoryList) {
-						ArrayList<Integer> items = new ArrayList<>();
+						ArrayList<Integer> items = inventory.getItems();
 						for (int itemId : items) {
 							insertInventory.setInt(1, inventory.getInventoryId());
 							insertInventory.setInt(2, itemId);
@@ -477,17 +489,6 @@ public class DerbyDatabase implements IDatabase {
 						}
 					}
 					insertConnection.executeBatch();
-					
-					insertItem = conn.prepareStatement("insert into items (itemName, uses, value, itemType, itemDescription) values (?, ?, ?, ?,?)");
-					for (Item item : itemList) {
-						insertItem.setString(1, item.getItemName());
-						insertItem.setInt(2, item.getUses());
-						insertItem.setInt(3, item.getValue());
-						insertItem.setString(4, item.getItemType());
-						insertItem.setString(5, item.getDescription());
-						insertItem.addBatch();
-					}
-					insertItem.executeBatch();
 					
 					return true;
 				} finally {
