@@ -1,7 +1,7 @@
 package edu.ycp.cs320.TBAG.model;
 
 public class Item {
-	private Integer itemID, uses, value;
+	private Integer itemId, uses, value;
 	private String itemDescription, itemName,itemType;
 
 	public Item() {
@@ -9,11 +9,11 @@ public class Item {
 	}
 	
 	public void setItemId(int itemID) {
-		this.itemID = itemID;
+		this.itemId = itemID;
 	}
 	
 	public Integer getItemId() {
-		return itemID;
+		return itemId;
 	}
 	
 	public void setItemName(String itemName) {
