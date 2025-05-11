@@ -18,4 +18,5 @@ public interface IDatabase {
 	public Map<String, Integer> findConnectionsByRoomId(int roomId);
 	public Actor findActorByActorId(int actorId);
 	public Actor updateActorRoomId(int actorId, int roomId);
+	public Inventory updateInventoryItems(int itemId, int senderId, int destinationId);
 }

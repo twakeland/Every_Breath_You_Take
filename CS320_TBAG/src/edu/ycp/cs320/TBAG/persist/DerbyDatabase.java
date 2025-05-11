@@ -325,6 +325,7 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
 	@Override
 	public Actor updateActorRoomId(final int actorId, final int roomId) {
 		return executeTransaction(new Transaction<Actor>() {
@@ -373,6 +374,74 @@ public class DerbyDatabase implements IDatabase {
 					}
 					
 					return actor;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public Inventory updateInventoryItems(final int itemId, final int senderId, final int destinationId) {
+		return executeTransaction(new Transaction<Inventory>() {
+			@Override
+			public Inventory execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					// retrieve all attributes from Items table
+					stmt = conn.prepareStatement(
+							"insert into inventories (inventory_id, item_id) values (?, ?) "
+					);
+					stmt.setInt(1, destinationId);
+					stmt.setInt(2, itemId);
+					
+					stmt.execute();
+					
+					stmt = conn.prepareStatement(
+							"update inventories " +
+							"  set item_id = 1 " +
+							" where inventory_id = ? and item_id = ?"
+					);
+					stmt.setInt(1, senderId);
+					stmt.setInt(2, itemId);
+					
+					stmt.execute();
+					
+					// retrieve all attributes from Rooms table
+					stmt = conn.prepareStatement(
+							"select inventories.item_id " +
+							"  from inventories, items " +
+							" where inventories.item_id = items.item_id " +
+							" and inventories.inventory_id = ? "
+					);
+					stmt.setInt(1, destinationId);
+					
+					resultSet = stmt.executeQuery();
+					
+					Inventory inventory = new Inventory();
+					
+					inventory.setInventoryId(destinationId);
+					
+					// for testing that a result was returned
+					Boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						// create new Inventory object
+						// retrieve attributes from resultSet starting with index 1
+						loadInventory(inventory, resultSet, 1);
+					}
+					
+					// check if the title was found
+					if (!found) {
+						System.out.println("<" + destinationId + "> was not found in the inventories table");
+					}
+					
+					return inventory;
 				} finally {
 					DBUtil.closeQuietly(resultSet);
 					DBUtil.closeQuietly(stmt);

@@ -67,7 +67,7 @@ public class GameEngine {
 		if(command.equalsIgnoreCase("pick up")) {
 			if(db.findInventoryByInventoryId(db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).getInventoryId()).getItems().size() != 0) {
 				int itemId = db.findInventoryByInventoryId(db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).getInventoryId()).removeItem(0);
-				db.findInventoryByInventoryId(db.findActorByActorId(1).getInventoryId()).addItem(itemId);
+				db.updateInventoryItems(itemId, db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).getInventoryId(), db.findActorByActorId(1).getInventoryId());
 				//Integer size = user.getInventory().getItems().size();
 				return "You picked up the " + db.findItemByItemId(itemId).getItemName();
 			}
@@ -80,13 +80,13 @@ public class GameEngine {
 		}
 		
 		if(command.equalsIgnoreCase("check inventory")) {
-			Integer size = db.findActorByActorId(1).getInventory().getItems().size();
+			Integer size = db.findInventoryByInventoryId(db.findActorByActorId(1).getInventoryId()).getItems().size();
 			String items = "Your inventory:\n"; 
 			if(size == 0) {
 				return "There's nothing in your inventory";
 			}
 			for(int i = 0; i < size; i++) {
-				items += db.findItemByItemId(db.findActorByActorId(1).getInventory().getItem(i)).getItemName() + "\n";
+				items += db.findItemByItemId(db.findInventoryByInventoryId(db.findActorByActorId(1).getInventoryId()).getItem(i)).getItemName() + "\n";
 			}
 			return items;
 		}
