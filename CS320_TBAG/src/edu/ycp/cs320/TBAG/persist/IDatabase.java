@@ -15,8 +15,8 @@ public interface IDatabase {
 	public List<Item> findItemByItemName(String itemName);
 	public List<Pair<Inventory, Item>> findItemInInventory(Inventory inventory);
 	public Inventory findInventoryByInventoryId(int inventoryId);
-	//public List<Pair<Room, Actor>> findActorsInRoom(Room Room);
-	//public List<Pair<Room, Inventory>> findRoomInventory(Room Room);
-	//public List<Pair<Actor, Inventory>> findActorInventory(Actor actor);
 	public Map<String, Integer> findConnectionsByRoomId(int roomId);
+	public Actor findActorByActorId(int actorId);
+	public Actor updateActorRoomId(int actorId, int roomId);
+	public Inventory updateInventoryItems(int itemId, int senderId, int destinationId);
 }

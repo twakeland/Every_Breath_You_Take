@@ -1,13 +1,13 @@
 ----------------------------------------------------------------
-Sat May 10 22:46:20 EDT 2025:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0196-bd3c-7dcd-00000e38c158 
-on database directory /Users/jeremiahmaldonado/CS320/Every_Breath_You_Take/CS320_TBAG/test.db with class loader sun.misc.Launcher$AppClassLoader@4e0e2f2a 
-Loaded from file:/Users/jeremiahmaldonado/CS320/EveryBreathYouTake/CS320_Derby/lib/derby.jar
+Mon May 12 13:37:25 EDT 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0196-c592-aae7-00000cc0aa20 
+on database directory C:\TBAG\Every_Breath_You_Take\CS320_TBAG\test.db with class loader sun.misc.Launcher$AppClassLoader@4e0e2f2a 
+Loaded from file:/C:/TBAG/Every_Breath_You_Take/CS320_Derby/lib/derby.jar
 java.vendor=Temurin
 java.runtime.version=1.8.0_442-b06
-user.dir=/Users/jeremiahmaldonado/CS320/Every_Breath_You_Take/CS320_TBAG
-os.name=Mac OS X
-os.arch=x86_64
-os.version=15.4.1
+user.dir=C:\TBAG\Every_Breath_You_Take\CS320_TBAG
+os.name=Windows 11
+os.arch=amd64
+os.version=10.0
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''

@@ -12,8 +12,6 @@ import edu.ycp.cs320.TBAG.persist.FakeDatabase;
 import edu.ycp.cs320.TBAG.persist.DerbyDatabase;
 
 public class GameEngine {
-	private Room start, hallway, lab, basement;
-	private Item axe, healthKit, oxygenTank;
 	private Player user;
 	private NPC tempNPC;
 	
@@ -25,15 +23,10 @@ public class GameEngine {
 		
 		//Temporary addNPC to hallway
 		Item tempQuestItem = new Item();
-		lab.getInventory().addItem(tempQuestItem);
+		//lab.getInventory().addItem(tempQuestItem);
 		tempNPC = new NPC(2, 2, 7, 50, "Stranger", true, "You punch the stranger in the throat for no reason. \n\"Have at thee!\" he yells, readying his weapon.", "You leave the stranger to his shenanigans.", "You wouldn't happen to have a shiny rock on you?", "You remove the shiny rock you found and hand it to the stranger. His eyes shine with happiness.", tempQuestItem);
-		hallway.addNPC(tempNPC);	
+		//hallway.addNPC(tempNPC);	
 		
-		db.findRoomByRoomId(2).getInventory().addItem(axe);
-		db.findRoomByRoomId(3).getInventory().addItem(healthKit);
-		db.findRoomByRoomId(4).getInventory().addItem(oxygenTank);
-		
-		user = new Player(1, 1, 1, 100, "player", null);
 		db.findRoomByRoomId(1).setHasVisited(true);
 		return db.findRoomByRoomId(1).getLongDesc();
 	}
@@ -43,25 +36,25 @@ public class GameEngine {
 		IDatabase db = DatabaseProvider.getInstance();
 		
 		if(command.equalsIgnoreCase("north") || command.equalsIgnoreCase("south") || command.equalsIgnoreCase("west") || command.equalsIgnoreCase("east") || command.equalsIgnoreCase("up") || command.equalsIgnoreCase("down")) {
-			if(db.findRoomByRoomId(user.getRoomId()).getConnection(command) != null) {
-				moveActor(db.findRoomByRoomId(user.getRoomId()).getConnection(command));
+			if(db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).getConnection(command) != null) {
+				db.updateActorRoomId(1, db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).getConnection(command));
 				
-				if(db.findRoomByRoomId(user.getRoomId()).getHasVisited()) {
-					return db.findRoomByRoomId(user.getRoomId()).getShortDesc();
+				if(db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).getHasVisited()) {
+					return db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).getShortDesc();
 				}
 				else {
-					db.findRoomByRoomId(user.getRoomId()).setHasVisited(true);
+					db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).setHasVisited(true);
 					//Good lord please ignore how barebones this convo system is so far-->
-					System.out.println(db.findRoomByRoomId(user.getRoomId()).containsNPCS());
-					if(db.findRoomByRoomId(user.getRoomId()).containsNPCS()){
-						String tempString = db.findRoomByRoomId(user.getRoomId()).getLongDesc();
+					System.out.println(db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).containsNPCS());
+					if(db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).containsNPCS()){
+						String tempString = db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).getLongDesc();
 						//tempString += "\n" + db.findRoomByRoomId(user.getRoomId()).NPCS.get(0).getTempConvo();
 						
 						return tempString;
 					}
 					
 					System.out.println("No NPCS detected, initial descr overridden");
-					return db.findRoomByRoomId(user.getRoomId()).getLongDesc();
+					return db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).getLongDesc();
 					
 				}
 			}
@@ -72,35 +65,32 @@ public class GameEngine {
 		}
 		
 		if(command.equalsIgnoreCase("pick up")) {
-			if(db.findRoomByRoomId(user.getRoomId()).getInventory().getItems().size() != 0) {
-				user.getInventory().addItem(db.findRoomByRoomId(user.getRoomId()).getInventory().removeItem(0));
-				Integer size = user.getInventory().getItems().size();
-				return "You picked up the " + user.getInventory().getItem(size - 1).getItemName();
+			if(db.findInventoryByInventoryId(db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).getInventoryId()).getItems().size() != 0) {
+				int itemId = db.findInventoryByInventoryId(db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).getInventoryId()).removeItem(0);
+				db.updateInventoryItems(itemId, db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).getInventoryId(), db.findActorByActorId(1).getInventoryId());
+				//Integer size = user.getInventory().getItems().size();
+				return "You picked up the " + db.findItemByItemId(itemId).getItemName();
 			}
 			
 			return "There is nothing to pick up";
 		}
 		
 		if(command.equalsIgnoreCase("search")) {
-			return db.findRoomByRoomId(user.getRoomId()).getLongDesc();
+			return db.findRoomByRoomId(db.findActorByActorId(1).getRoomId()).getLongDesc();
 		}
 		
 		if(command.equalsIgnoreCase("check inventory")) {
-			Integer size = user.getInventory().getItems().size();
+			Integer size = db.findInventoryByInventoryId(db.findActorByActorId(1).getInventoryId()).getItems().size();
 			String items = "Your inventory:\n"; 
 			if(size == 0) {
 				return "There's nothing in your inventory";
 			}
 			for(int i = 0; i < size; i++) {
-				items += user.getInventory().getItem(i).getItemName() + "\n";
+				items += db.findItemByItemId(db.findInventoryByInventoryId(db.findActorByActorId(1).getInventoryId()).getItem(i)).getItemName() + "\n";
 			}
 			return items;
 		}
 		
 		return "I do not recognize that command";
-	}
-	
-	public void moveActor(Integer roomID) {
-		user.setRoomId(roomID);
 	}
 }
