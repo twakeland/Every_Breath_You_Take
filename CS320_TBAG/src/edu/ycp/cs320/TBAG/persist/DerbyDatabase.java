@@ -576,7 +576,7 @@ public class DerbyDatabase implements IDatabase {
 							"	inventory_id integer, " +
 							"	roomName varchar(200), " +
 							"	shortDesc varchar(200), " +
-							"	longDesc varchar(200)" +
+							"	longDesc varchar(400)" +
 							")"
 					);	
 					stmt3.executeUpdate();

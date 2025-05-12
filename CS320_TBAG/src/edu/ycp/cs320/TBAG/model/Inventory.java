@@ -52,15 +52,4 @@ public class Inventory {
     public void setInventoryId(int inventoryId) {
     	this.inventoryId = inventoryId;
     }
-    
-    
-    // New method to get an item by description
-    public Item getItemByString(String description) {
-        for (Item item : items) {
-            if (item.getDescription().equalsIgnoreCase(description)) {
-                return item;
-            }
-        }
-        return null;
-    }
 }
