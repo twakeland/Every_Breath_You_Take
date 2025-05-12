@@ -401,9 +401,8 @@ public class DerbyDatabase implements IDatabase {
 					stmt.execute();
 					
 					stmt = conn.prepareStatement(
-							"update inventories " +
-							"  set item_id = 1 " +
-							" where inventory_id = ? and item_id = ?"
+							"delete from inventories " +
+							"  where inventory_id = ? and item_id = ? "
 					);
 					stmt.setInt(1, senderId);
 					stmt.setInt(2, itemId);
